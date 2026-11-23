@@ -1,0 +1,11 @@
+{
+"type": "FeatureCollection",
+"name": "demo_roads",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{"type":"Feature","properties":{"name":"Main Road","class":"highway"},"geometry":{"type":"LineString","coordinates":[[84.975910329894361,27.471589666182687],[85.021410716588903,27.473326874489135]]}},
+{"type":"Feature","properties":{"name":"Ward Road 2","class":"local"},"geometry":{"type":"LineString","coordinates":[[84.998213157491136,27.469204763792028],[84.99832740169316,27.490865905676422]]}},
+{"type":"Feature","properties":{"name":"Ward Road 5","class":"local"},"geometry":{"type":"LineString","coordinates":[[84.981732819517575,27.485211324446482],[85.015077574667629,27.487947197918345]]}},
+{"type":"Feature","properties":{"name":"Hill Track","class":"track"},"geometry":{"type":"LineString","coordinates":[[85.012325993349222,27.472114454367844],[85.01908402589315,27.490260507702644]]}}
+]
+}

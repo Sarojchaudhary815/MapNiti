@@ -1,0 +1,67 @@
+/* VS Code "Dark+" colours for Prism tokens. Scoped to .code-hl so nothing else changes. */
+.code-hl { color: #d4d4d4; }
+.code-hl .token.comment,
+.code-hl .token.prolog,
+.code-hl .token.doctype,
+.code-hl .token.cdata { color: #6a9955; font-style: italic; }
+.code-hl .token.keyword,
+.code-hl .token.boolean,
+.code-hl .token.important { color: #569cd6; }
+.code-hl .token.keyword.control-flow,
+.code-hl .language-python .token.keyword { color: #c586c0; }
+.code-hl .token.string,
+.code-hl .token.char,
+.code-hl .token.attr-value,
+.code-hl .token.template-string,
+.code-hl .token.url { color: #ce9178; }
+.code-hl .token.number { color: #b5cea8; }
+.code-hl .token.function,
+.code-hl .token.function-variable { color: #dcdcaa; }
+.code-hl .token.class-name,
+.code-hl .token.builtin { color: #4ec9b0; }
+.code-hl .token.operator,
+.code-hl .token.punctuation { color: #d4d4d4; }
+.code-hl .token.property,
+.code-hl .token.parameter,
+.code-hl .token.variable,
+.code-hl .token.constant { color: #9cdcfe; }
+.code-hl .token.tag,
+.code-hl .token.tag .token.punctuation { color: #569cd6; }
+.code-hl .token.tag .token.tag { color: #569cd6; }
+.code-hl .token.attr-name { color: #9cdcfe; }
+.code-hl .token.selector { color: #d7ba7d; }
+.code-hl .token.decorator,
+.code-hl .token.annotation { color: #dcdcaa; }
+.code-hl .token.interpolation-punctuation,
+.code-hl .token.template-punctuation { color: #569cd6; }
+.code-hl .token.regex { color: #d16969; }
+.code-hl .token.entity { color: #569cd6; }
+
+/* The editor: a transparent textarea stacked exactly over the highlighted <pre>. */
+.code-editor { display: grid; }
+.code-editor > textarea,
+.code-editor > pre {
+  grid-area: 1 / 1;
+  margin: 0;
+  border: 0;
+  padding: 16px 16px 16px 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  line-height: 21px;
+  white-space: pre;
+  word-wrap: normal;
+  tab-size: 4;
+  letter-spacing: normal;
+  font-variant-ligatures: none;
+  background: transparent;
+  overflow: hidden;
+}
+.code-editor > textarea {
+  color: transparent;
+  caret-color: #f8fafc;
+  resize: none;
+  outline: none;
+  -webkit-text-fill-color: transparent;
+}
+.code-editor > textarea::selection { background: rgba(38, 79, 120, 0.9); -webkit-text-fill-color: transparent; }
+.code-editor > pre { pointer-events: none; }

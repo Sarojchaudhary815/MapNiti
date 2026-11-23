@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "demo_river",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{"type":"Feature","properties":{"name":"Demo Khola","type":"river"},"geometry":{"type":"LineString","coordinates":[[84.97382122830895,27.475169159183235],[84.987950404002532,27.477179089445681],[85.002039475638838,27.481443227596309],[85.011176676310896,27.479769148295823],[85.023259885645629,27.483100010674701]]}}
+]
+}

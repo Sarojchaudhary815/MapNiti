@@ -1,0 +1,13 @@
+station,district,province,lat,lon,elevation_m
+Kathmandu Airport,Kathmandu,Bagmati,27.6966,85.3591,1337
+Pokhara Airport,Kaski,Gandaki,28.2009,83.9821,827
+Biratnagar,Morang,Koshi,26.4815,87.264,72
+Nepalgunj,Banke,Lumbini,28.1036,81.667,165
+Dhangadhi,Kailali,Sudurpashchim,28.6852,80.5932,109
+Jumla,Jumla,Karnali,29.2742,82.1933,2300
+Simara,Bara,Madhesh,27.1646,84.98,130
+Bhairahawa,Rupandehi,Lumbini,27.5057,83.4163,109
+Dadeldhura,Dadeldhura,Sudurpashchim,29.3,80.5833,1848
+Taplejung,Taplejung,Koshi,27.3509,87.6693,1732
+Dhankuta,Dhankuta,Koshi,26.9833,87.35,1210
+Surkhet,Surkhet,Karnali,28.5866,81.6366,720

@@ -1,0 +1,291 @@
+station,year,month,rain_mm
+Kathmandu Airport,2022,1,17.1
+Kathmandu Airport,2022,2,17.4
+Kathmandu Airport,2022,3,35.4
+Kathmandu Airport,2022,4,65.9
+Kathmandu Airport,2022,5,95.7
+Kathmandu Airport,2022,6,
+Kathmandu Airport,2022,7,407.0
+Kathmandu Airport,2022,8,377.2
+Kathmandu Airport,2022,9,171.0
+Kathmandu Airport,2022,10,58.5
+Kathmandu Airport,2022,11,11.2
+Kathmandu Airport,2022,12,18.2
+Pokhara Airport,2022,1,41.8
+Pokhara Airport,2022,2,54.4
+Pokhara Airport,2022,3,75.8
+Pokhara Airport,2022,4,134.7
+Pokhara Airport,2022,5,320.5
+Pokhara Airport,2022,6,487.9
+Pokhara Airport,2022,7,1089.3
+Pokhara Airport,2022,8,914.5
+Pokhara Airport,2022,9,616.5
+Pokhara Airport,2022,10,144.7
+Pokhara Airport,2022,11,38.5
+Pokhara Airport,2022,12,46.7
+Biratnagar,2022,1,22.8
+Biratnagar,2022,2,20.3
+Biratnagar,2022,3,39.3
+Biratnagar,2022,4,61.8
+Biratnagar,2022,5,132.3
+Biratnagar,2022,6,349.3
+Biratnagar,2022,7,538.7
+Biratnagar,2022,8,542.9
+Biratnagar,2022,9,255.6
+Biratnagar,2022,10,74.8
+Biratnagar,2022,11,15.8
+Biratnagar,2022,12,16.9
+Nepalgunj,2022,1,11.4
+Nepalgunj,2022,2,16.6
+Nepalgunj,2022,3,24.2
+Nepalgunj,2022,4,60.8
+Nepalgunj,2022,5,108.5
+Nepalgunj,2022,6,261.3
+Nepalgunj,2022,7,369.6
+Nepalgunj,2022,8,279.1
+Nepalgunj,2022,9,228.6
+Nepalgunj,2022,10,64.5
+Nepalgunj,2022,11,10.6
+Nepalgunj,2022,12,12.5
+Dhangadhi,2022,1,18.6
+Dhangadhi,2022,2,16.7
+Dhangadhi,2022,3,28.9
+Dhangadhi,2022,4,51.3
+Dhangadhi,2022,5,155.5
+Dhangadhi,2022,6,294.4
+Dhangadhi,2022,7,449.9
+Dhangadhi,2022,8,426.5
+Dhangadhi,2022,9,233.1
+Dhangadhi,2022,10,70.3
+Dhangadhi,2022,11,11.2
+Dhangadhi,2022,12,13.7
+Jumla,2022,1,8.7
+Jumla,2022,2,9.5
+Jumla,2022,3,16.5
+Jumla,2022,4,36.2
+Jumla,2022,5,68.3
+Jumla,2022,6,131.4
+Jumla,2022,7,197.7
+Jumla,2022,8,158.7
+Jumla,2022,9,85.7
+Jumla,2022,10,31.0
+Jumla,2022,11,5.5
+Jumla,2022,12,7.6
+Simara,2022,1,21.2
+Simara,2022,2,18.7
+Simara,2022,3,28.0
+Simara,2022,4,64.1
+Simara,2022,5,129.1
+Simara,2022,6,311.3
+Simara,2022,7,444.3
+Simara,2022,8,452.2
+Simara,2022,9,272.7
+Simara,2022,10,68.6
+Simara,2022,11,16.7
+Simara,2022,12,15.0
+Bhairahawa,2022,1,12.2
+Bhairahawa,2022,2,15.3
+Bhairahawa,2022,3,35.6
+Bhairahawa,2022,4,62.8
+Bhairahawa,2022,5,106.3
+Bhairahawa,2022,6,256.1
+Bhairahawa,2022,7,317.2
+Bhairahawa,2022,8,386.6
+Bhairahawa,2022,9,218.0
+Bhairahawa,2022,10,60.2
+Bhairahawa,2022,11,11.5
+Bhairahawa,2022,12,17.0
+Dadeldhura,2022,1,12.1
+Dadeldhura,2022,2,12.4
+Dadeldhura,2022,3,21.0
+Dadeldhura,2022,4,64.0
+Dadeldhura,2022,5,125.2
+Dadeldhura,2022,6,228.8
+Dadeldhura,2022,7,275.5
+Dadeldhura,2022,8,353.1
+Dadeldhura,2022,9,207.4
+Dadeldhura,2022,10,57.6
+Dadeldhura,2022,11,10.1
+Dadeldhura,2022,12,11.5
+Taplejung,2022,1,16.0
+Taplejung,2022,2,28.8
+Taplejung,2022,3,39.1
+Taplejung,2022,4,68.1
+Taplejung,2022,5,144.5
+Taplejung,2022,6,332.7
+Taplejung,2022,7,402.4
+Taplejung,2022,8,518.5
+Taplejung,2022,9,316.2
+Taplejung,2022,10,88.8
+Taplejung,2022,11,15.5
+Taplejung,2022,12,21.3
+Dhankuta,2022,1,9.9
+Dhankuta,2022,2,12.3
+Dhankuta,2022,3,15.1
+Dhankuta,2022,4,36.4
+Dhankuta,2022,5,58.6
+Dhankuta,2022,6,151.5
+Dhankuta,2022,7,208.6
+Dhankuta,2022,8,171.9
+Dhankuta,2022,9,106.6
+Dhankuta,2022,10,39.7
+Dhankuta,2022,11,6.3
+Dhankuta,2022,12,11.5
+Surkhet,2022,1,16.6
+Surkhet,2022,2,17.7
+Surkhet,2022,3,33.5
+Surkhet,2022,4,48.7
+Surkhet,2022,5,157.3
+Surkhet,2022,6,253.7
+Surkhet,2022,7,438.3
+Surkhet,2022,8,278.6
+Surkhet,2022,9,
+Surkhet,2022,10,63.7
+Surkhet,2022,11,15.6
+Surkhet,2022,12,16.6
+Kathmandu Airport,2023,1,14.8
+Kathmandu Airport,2023,2,15.9
+Kathmandu Airport,2023,3,27.5
+Kathmandu Airport,2023,4,60.6
+Kathmandu Airport,2023,5,116.3
+Kathmandu Airport,2023,6,182.6
+Kathmandu Airport,2023,7,418.7
+Kathmandu Airport,2023,8,395.4
+Kathmandu Airport,2023,9,172.2
+Kathmandu Airport,2023,10,61.6
+Kathmandu Airport,2023,11,9.7
+Kathmandu Airport,2023,12,16.3
+Pokhara Airport,2023,1,34.7
+Pokhara Airport,2023,2,50.5
+Pokhara Airport,2023,3,86.9
+Pokhara Airport,2023,4,177.0
+Pokhara Airport,2023,5,250.8
+Pokhara Airport,2023,6,753.8
+Pokhara Airport,2023,7,809.7
+Pokhara Airport,2023,8,659.5
+Pokhara Airport,2023,9,561.0
+Pokhara Airport,2023,10,145.9
+Pokhara Airport,2023,11,36.3
+Pokhara Airport,2023,12,45.0
+Biratnagar,2023,1,18.2
+Biratnagar,2023,2,29.4
+Biratnagar,2023,3,35.8
+Biratnagar,2023,4,80.6
+Biratnagar,2023,5,140.5
+Biratnagar,2023,6,389.8
+Biratnagar,2023,7,399.5
+Biratnagar,2023,8,339.9
+Biratnagar,2023,9,270.9
+Biratnagar,2023,10,99.7
+Biratnagar,2023,11,19.1
+Biratnagar,2023,12,22.5
+Nepalgunj,2023,1,16.7
+Nepalgunj,2023,2,20.1
+Nepalgunj,2023,3,28.3
+Nepalgunj,2023,4,50.8
+Nepalgunj,2023,5,127.2
+Nepalgunj,2023,6,242.1
+Nepalgunj,2023,7,314.8
+Nepalgunj,2023,8,245.5
+Nepalgunj,2023,9,220.2
+Nepalgunj,2023,10,49.3
+Nepalgunj,2023,11,13.6
+Nepalgunj,2023,12,12.2
+Dhangadhi,2023,1,13.8
+Dhangadhi,2023,2,23.8
+Dhangadhi,2023,3,28.1
+Dhangadhi,2023,4,57.1
+Dhangadhi,2023,5,142.8
+Dhangadhi,2023,6,322.9
+Dhangadhi,2023,7,346.1
+Dhangadhi,2023,8,338.5
+Dhangadhi,2023,9,271.0
+Dhangadhi,2023,10,84.0
+Dhangadhi,2023,11,13.6
+Dhangadhi,2023,12,14.0
+Jumla,2023,1,6.1
+Jumla,2023,2,8.3
+Jumla,2023,3,13.1
+Jumla,2023,4,34.8
+Jumla,2023,5,51.9
+Jumla,2023,6,128.4
+Jumla,2023,7,210.6
+Jumla,2023,8,183.1
+Jumla,2023,9,95.2
+Jumla,2023,10,36.9
+Jumla,2023,11,7.1
+Jumla,2023,12,9.0
+Simara,2023,1,14.7
+Simara,2023,2,17.5
+Simara,2023,3,43.7
+Simara,2023,4,68.3
+Simara,2023,5,129.7
+Simara,2023,6,286.4
+Simara,2023,7,467.2
+Simara,2023,8,486.2
+Simara,2023,9,225.1
+Simara,2023,10,87.3
+Simara,2023,11,11.0
+Simara,2023,12,18.5
+Bhairahawa,2023,1,17.1
+Bhairahawa,2023,2,15.4
+Bhairahawa,2023,3,
+Bhairahawa,2023,4,61.4
+Bhairahawa,2023,5,157.8
+Bhairahawa,2023,6,268.3
+Bhairahawa,2023,7,467.1
+Bhairahawa,2023,8,405.6
+Bhairahawa,2023,9,220.3
+Bhairahawa,2023,10,73.1
+Bhairahawa,2023,11,9.7
+Bhairahawa,2023,12,12.9
+Dadeldhura,2023,1,15.1
+Dadeldhura,2023,2,17.9
+Dadeldhura,2023,3,22.5
+Dadeldhura,2023,4,52.8
+Dadeldhura,2023,5,109.5
+Dadeldhura,2023,6,246.2
+Dadeldhura,2023,7,328.1
+Dadeldhura,2023,8,273.5
+Dadeldhura,2023,9,170.6
+Dadeldhura,2023,10,50.1
+Dadeldhura,2023,11,11.2
+Dadeldhura,2023,12,15.4
+Taplejung,2023,1,19.5
+Taplejung,2023,2,21.0
+Taplejung,2023,3,34.7
+Taplejung,2023,4,89.8
+Taplejung,2023,5,185.3
+Taplejung,2023,6,256.8
+Taplejung,2023,7,376.0
+Taplejung,2023,8,460.8
+Taplejung,2023,9,230.5
+Taplejung,2023,10,93.0
+Taplejung,2023,11,14.5
+Taplejung,2023,12,16.4
+Dhankuta,2023,1,11.5
+Dhankuta,2023,2,9.5
+Dhankuta,2023,3,17.0
+Dhankuta,2023,4,31.4
+Dhankuta,2023,5,61.4
+Dhankuta,2023,6,115.6
+Dhankuta,2023,7,177.3
+Dhankuta,2023,8,175.0
+Dhankuta,2023,9,103.3
+Dhankuta,2023,10,39.7
+Dhankuta,2023,11,8.3
+Dhankuta,2023,12,9.0
+Surkhet,2023,1,14.5
+Surkhet,2023,2,19.2
+Surkhet,2023,3,38.0
+Surkhet,2023,4,75.2
+Surkhet,2023,5,98.8
+Surkhet,2023,6,215.2
+Surkhet,2023,7,333.5
+Surkhet,2023,8,307.9
+Surkhet,2023,9,232.0
+Surkhet,2023,10,61.3
+Surkhet,2023,11,9.9
+Surkhet,2023,12,15.0
+Kathmandu Airport,2022,11,11.2
+Kathmandu Airport,2022,12,18.2

@@ -1,0 +1,48 @@
+# One-command hosting: MySQL + FastAPI backend + React (nginx).
+#   1. cp mapniti-backend/.env.example mapniti-backend/.env   (fill it in)
+#   2. put your GEE service-account key at mapniti-backend/secrets/gee-key.json
+#   3. docker compose up -d --build
+# Site: http://SERVER_IP  (put Caddy/Certbot in front for HTTPS)
+services:
+  mysql:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: mapniti
+      MYSQL_USER: mapniti_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change-me}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change-me-too}
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 10
+
+  backend:
+    build: ./mapniti-backend
+    restart: unless-stopped
+    env_file: ./mapniti-backend/.env
+    environment:
+      DATABASE_URL: mysql+pymysql://mapniti_user:${MYSQL_PASSWORD:-change-me}@mysql:3306/mapniti?charset=utf8mb4
+      GEE_SERVICE_ACCOUNT_KEY_PATH: /app/secrets/gee-key.json
+      TRUST_PROXY_HEADERS: "true"   # nginx in front sets X-Forwarded-For
+    volumes:
+      - ./mapniti-backend/secrets:/app/secrets:ro
+      - avatars:/app/static/avatars
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
+  avatars:
