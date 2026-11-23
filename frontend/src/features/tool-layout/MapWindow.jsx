@@ -7,6 +7,8 @@ import { Layers } from 'lucide-react';
 import buildDrawStyles, { registerPointShapeImages } from '../data-management/components/digitization/drawStyles';
 import { makeSnapMode, makeRectangleMode, makeCircleMode } from '../data-management/components/digitization/snapModes';
 
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 const TERRAIN_TILES = ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'];
 
 // All CORS-friendly / ToS-safe raster sources (no raw Google tile scraping —
@@ -630,11 +632,11 @@ const MapWindow = forwardRef(({
         const rows = Object.entries(f.properties || {})
           .filter(([k, val]) => !['color', 'width', 'radius'].includes(k) && val !== '' && val !== null && val !== 'null')
           .slice(0, 10)
-          .map(([k, val]) => `<tr><td style="color:#64748b;padding-right:8px">${k}</td><td style="font-weight:600">${String(val).slice(0, 60)}</td></tr>`)
+          .map(([k, val]) => `<tr><td style="color:#64748b;padding-right:8px">${escapeHtml(k)}</td><td style="font-weight:600">${escapeHtml(String(val).slice(0, 60))}</td></tr>`)
           .join('');
         new maplibregl.Popup({ maxWidth: '280px' })
           .setLngLat(e.lngLat)
-          .setHTML(`<div style="font-size:11px"><b>${v.name || v.id}</b><table>${rows}</table></div>`)
+          .setHTML(`<div style="font-size:11px"><b>${escapeHtml(v.name || v.id)}</b><table>${rows}</table></div>`)
           .addTo(map);
       });
       map.on('mouseenter', id, () => { map.getCanvas().style.cursor = 'pointer'; });

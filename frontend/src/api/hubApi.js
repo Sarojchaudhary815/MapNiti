@@ -76,3 +76,14 @@ export const deleteRun = async (id) => (await API.delete(`/analysis/history/${id
 
 // Live Nepal feeds (BIPAD / DHM): rivers, rainfall, incidents
 export const getLiveFeed = async (kind, params = {}) => (await API.get(`/realtime/${kind}`, { params, timeout: 120000 })).data;
+
+// Field data collection
+export const listSurveys = async () => (await API.get('/field/surveys')).data.surveys;
+export const createSurvey = async (payload) => (await API.post('/field/surveys', payload)).data.survey;
+export const deleteSurvey = async (id) => (await API.delete(`/field/surveys/${id}`)).data;
+export const getSurveyRecords = async (id) => (await API.get(`/field/surveys/${id}/records`)).data;
+export const syncFieldRecords = async (id, records) =>
+  (await API.post(`/field/surveys/${id}/sync`, { records }, { timeout: 120000 })).data;
+export const deleteFieldRecord = async (id) => (await API.delete(`/field/records/${id}`)).data;
+export const exportSurvey = async (id, fmt) =>
+  (await API.get(`/field/surveys/${id}/export.${fmt}`, { responseType: 'blob' })).data;

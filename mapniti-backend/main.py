@@ -9,9 +9,10 @@ from app.models.learning import LessonProgress  # noqa: F401 registers table for
 from app.models.ai_usage import AiRequest  # noqa: F401 registers table for create_all
 from app.models.article import Article  # noqa: F401 registers table for create_all
 from app.models.analysis_run import AnalysisRun  # noqa: F401 registers table for create_all
+from app.models.field import FieldSurvey, FieldRecord  # noqa: F401 registers tables for create_all
 from app.services.analysis_jobs import recover_on_startup
 from app.api import (website, hydrology, urban, agriculture, disaster, data_mgmt, auth, projects, admin, raster,
-                     gee, engineering, ai, learn, analysis, downloads, articles, realtime)
+                     gee, engineering, ai, learn, analysis, downloads, articles, realtime, field)
 
 Base.metadata.create_all(bind=engine)
 run_migrations()
@@ -29,6 +30,7 @@ app.add_middleware(
 _static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 os.makedirs(os.path.join(_static_dir, "avatars"), exist_ok=True)
 os.makedirs(os.path.join(_static_dir, "articles"), exist_ok=True)
+os.makedirs(os.path.join(_static_dir, "field"), exist_ok=True)
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")
 
 app.include_router(website.router, prefix="/api/website", tags=["Website"])
@@ -42,6 +44,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(projects.router, prefix="/api/projects", tags=["Projects"])
 app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
 app.include_router(realtime.router, prefix="/api/realtime", tags=["Live data"])
+app.include_router(field.router, prefix="/api/field", tags=["Field data"])
 app.include_router(gee.router, prefix="/api/gee", tags=["GEE Data Hub"])
 app.include_router(engineering.router, prefix="/api/engineering", tags=["Engineer Toolkit"])
 app.include_router(ai.router, prefix="/api/ai", tags=["AI Assistant"])
