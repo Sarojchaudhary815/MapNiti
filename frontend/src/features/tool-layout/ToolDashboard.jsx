@@ -18,6 +18,7 @@ import GeeDataHub from '../gee-hub/GeeDataHub';
 import EngineerToolkit from '../engineering/EngineerToolkit';
 import AiAssistant from '../ai/AiAssistant';
 import DataDownload from '../downloads/DataDownload';
+import JobsTray from '../analysis/JobsTray';
 
 // Full-page modules render instead of the map + tool panel.
 const FULL_PAGE_MODULES = ['dashboard', 'admin', 'ai'];
@@ -324,6 +325,7 @@ export default function ToolDashboard({ onRasterGenerated, rasterData, activeToo
                   vectorLayers={vectorLayers}
                   boundaryVisible={boundaryVisible}
                 />
+                <JobsTray onOpenModule={(m) => { if (m && m !== activeModule) handleModuleChange(m); setIsPanelOpen(true); }} />
               </>
             )}
           </div>

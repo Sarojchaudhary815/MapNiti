@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChevronRight, ArrowLeft } from 'lucide-react';
 import AnalysisRunner from './AnalysisRunner';
 import { TOOL_CONFIGS } from './toolConfigs';
+import { onOpenRun, peekOpenRun } from './jobStore';
 
 // Shared list → tool layout for the Urban, Disaster and Agriculture modules.
 // `tools` = [{ id, icon, color }] (label/desc come from TOOL_CONFIGS unless
 // a custom `Comp` is given for tools that aren't Earth Engine runners).
 export default function ModuleTools({ title, subtitle, accent, tools, ...props }) {
-  const [active, setActive] = useState(null);
+  const [active, setActive] = useState(() => tools.find((t) => t.id === peekOpenRun()?.toolId) || null);
+  // A past run opened from the history: switch to its tool (the runner loads it).
+  useEffect(() => onOpenRun((req) => {
+    const t = tools.find((x) => x.id === req.toolId);
+    if (t) setActive(t);
+  }), [tools]);
   const meta = (t) => ({ label: t.label || TOOL_CONFIGS[t.id]?.label, desc: t.desc || TOOL_CONFIGS[t.id]?.desc });
 
   if (!active) {

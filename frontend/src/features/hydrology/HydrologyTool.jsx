@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Waves, Mountain, Droplets, Activity, AlertTriangle, ChevronRight, ArrowLeft, Save, GitBranch } from 'lucide-react';
 import WatershedDelineation from './components/WatershedDelineation';
 import FloodHazardMapping from './components/FloodHazardMapping';
 import RainfallRunoffModeling from './components/RainfallRunoffModeling';
 import FloodInundation from './components/FloodInundation';
 import AnalysisRunner from '../analysis/AnalysisRunner';
+import { onOpenRun, peekOpenRun } from '../analysis/jobStore';
+
+const SUBTOOL_OF_RUN = { 'hydro-drainage': 'drainage', 'hydro-corridor': 'corridor' };
 
 export default function HydrologyTool(props) {
   const { projectInfo } = props;
-  const [activeSubTool, setActiveSubTool] = useState(null);
+  const [activeSubTool, setActiveSubTool] = useState(() => SUBTOOL_OF_RUN[peekOpenRun()?.toolId] || null);
+  useEffect(() => onOpenRun((req) => { if (SUBTOOL_OF_RUN[req.toolId]) setActiveSubTool(SUBTOOL_OF_RUN[req.toolId]); }), []);
 
   const hydrologyFeatures = [
     { id: 'watershed', label: 'Watershed Delineation', icon: Mountain, color: 'text-cyan-500', desc: 'Identify drainage basins and catchments.' },

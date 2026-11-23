@@ -54,6 +54,7 @@ LONGTEXT_COLUMNS = {
     "digitized_data": ["layer_groups", "feature_collection"],
     "analysis_results": ["input_geometry", "result_data"],
     "articles": ["result_json", "aoi_geojson"],
+    "analysis_runs": ["result_json", "aoi_geojson"],
 }
 
 def get_db():

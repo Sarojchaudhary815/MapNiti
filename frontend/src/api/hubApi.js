@@ -67,3 +67,9 @@ export const deleteArticle = async (slug) => (await API.delete(`/articles/${slug
 export const getAdminIndex = async () => (await API.get('/downloads/admin/NPL/index')).data;
 export const getAdminFeature = async (level, i) => (await API.get(`/downloads/admin/NPL/${level}/${i}`)).data;
 export const getPalikaWards = async (i) => (await API.get(`/downloads/admin/NPL/wards/${i}`, { timeout: 150000 })).data;
+
+// Background analysis jobs + run history (results are cached server-side)
+export const submitJob = async (toolId, payload) => (await API.post(`/analysis/jobs/${toolId}`, payload)).data;
+export const getJob = async (id) => (await API.get(`/analysis/jobs/${id}`)).data;
+export const getRunHistory = async (limit = 50) => (await API.get('/analysis/history', { params: { limit } })).data.runs;
+export const deleteRun = async (id) => (await API.delete(`/analysis/history/${id}`)).data;

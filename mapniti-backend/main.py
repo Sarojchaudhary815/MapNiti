@@ -8,11 +8,14 @@ from app.models.message import ContactMessage  # noqa: F401 registers table for 
 from app.models.learning import LessonProgress  # noqa: F401 registers table for create_all
 from app.models.ai_usage import AiRequest  # noqa: F401 registers table for create_all
 from app.models.article import Article  # noqa: F401 registers table for create_all
+from app.models.analysis_run import AnalysisRun  # noqa: F401 registers table for create_all
+from app.services.analysis_jobs import recover_on_startup
 from app.api import (website, hydrology, urban, agriculture, disaster, data_mgmt, auth, projects, admin, raster,
                      gee, engineering, ai, learn, analysis, downloads, articles)
 
 Base.metadata.create_all(bind=engine)
 run_migrations()
+recover_on_startup()
 app = FastAPI(title="MapNiti GIS API", version="1.0.0")
 
 app.add_middleware(

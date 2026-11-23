@@ -1,9 +1,13 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Loader2, Play, Download, Save, AlertCircle, Info, ChevronDown, Layers, Globe2, FileText } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
 import AoiPicker from '../../components/common/AoiPicker';
 import MapLegend, { downloadCsv } from '../../components/common/MapLegend';
-import { runAnalysis } from '../../api/hubApi';
+import { submitJob, getJob } from '../../api/hubApi';
+import { featureToAoi } from '../../components/common/AoiPicker';
+import {
+  trackJob, getJobState, activeJobFor, subscribe, markSeen, askNotificationPermission, takeOpenRun, onOpenRun,
+} from './jobStore';
 import { saveResult } from '../../api/projectApi';
 import { TOOL_CONFIGS } from './toolConfigs';
 import PublishArticleModal from '../articles/PublishArticleModal';
@@ -176,15 +180,19 @@ export function ResultView({ result, toolId, opacity, setOpacity }) {
 export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, onStartDrawing, setMapLayers, setVectorLayers, projectInfo, mapRef }) {
   const cfg = TOOL_CONFIGS[toolId];
   const [values, setValues] = useState(() => defaultsFor(cfg));
-  const [loading, setLoading] = useState(false);
+  // The run itself lives in jobStore, so it survives switching tools; this panel
+  // just follows the job it started (or the one still running for this tool).
+  const [jobId, setJobId] = useState(() => activeJobFor(toolId)?.id || null);
+  const loading = !!jobId;
   const [elapsed, setElapsed] = useState(0);
   useEffect(() => {
-    if (!loading) return undefined;
-    setElapsed(0);
-    const started = Date.now();
-    const t = setInterval(() => setElapsed(Math.floor((Date.now() - started) / 1000)), 1000);
+    if (!jobId) return undefined;
+    const started = getJobState(jobId)?.startedAt || Date.now();
+    const tick = () => setElapsed(Math.floor((Date.now() - started) / 1000));
+    tick();
+    const t = setInterval(tick, 1000);
     return () => clearInterval(t);
-  }, [loading]);
+  }, [jobId]);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [opacity, setOpacity] = useState(0.8);
@@ -219,17 +227,54 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
     }
   };
 
-  const run = async () => {
-    setLoading(true);
+  // Follow our job: show its result (or error) when the store says it ended.
+  useEffect(() => {
+    if (!jobId) return undefined;
+    const check = () => {
+      const j = getJobState(jobId);
+      if (!j || j.status === 'queued' || j.status === 'running') return;
+      if (j.status === 'done' && j.result) setResult(j.result);
+      else setError(j.error || 'Analysis failed.');
+      markSeen(jobId);
+      setJobId(null);
+    };
+    check();
+    return subscribe(check);
+  }, [jobId]);
+
+  // Open a past run from the history list / a finished-job toast.
+  const openRun = useCallback(async (runId) => {
     setError('');
     try {
-      const res = await runAnalysis(toolId, payload);
-      if (res.status === 'success') setResult(res);
-      else setError(res.message || 'Analysis failed.');
+      const r = await getJob(runId);
+      if (r.status !== 'done' || !r.result) { setError(r.error || 'That run has no result.'); return; }
+      if (r.aoi_geojson) {
+        const aoi = featureToAoi(r.aoi_geojson.type === 'Feature' ? r.aoi_geojson : { type: 'Feature', properties: {}, geometry: r.aoi_geojson });
+        if (r.aoi_name) aoi.name = r.aoi_name;
+        setSelectedAOI(aoi);
+      }
+      setValues((v) => ({ ...v, ...r.params }));
+      setResult(r.result);
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Could not open that run.');
+    }
+  }, [setSelectedAOI]);
+  useEffect(() => {
+    const p = takeOpenRun(toolId);
+    if (p) openRun(p.runId);
+    return onOpenRun((req) => { if (req.toolId === toolId && takeOpenRun(toolId)) openRun(req.runId); });
+  }, [toolId, openRun]);
+
+  const run = async (refresh = false) => {
+    setError('');
+    setResult(null);
+    askNotificationPermission();
+    try {
+      const res = await submitJob(toolId, { ...payload, aoi_name: selectedAOI?.name, refresh: refresh === true });
+      const job = trackJob(res, { toolId, aoiName: selectedAOI?.name });
+      if (res.status === 'done') { setResult(res.result); markSeen(job.id); } else setJobId(job.id);
     } catch (err) {
       setError(err.response?.data?.detail || err.message || 'Analysis failed.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -314,6 +359,16 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
 
       {result && (
         <>
+          {(result.cached || result.layers_expired) && (
+            <div className={`flex items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-[10px] ${result.layers_expired ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'}`}>
+              <span>
+                {result.layers_expired
+                  ? 'Saved result: the map layer has expired. Run again to see it on the map.'
+                  : `Instant result from the cache (computed ${new Date(result.computed_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}).`}
+              </span>
+              <button onClick={() => run(true)} disabled={loading} className="font-bold underline shrink-0">Run again</button>
+            </div>
+          )}
           <ResultView result={result} toolId={toolId} opacity={opacity} setOpacity={setOpacity} />
           {projectInfo && (
             <button onClick={save} className="w-full flex items-center justify-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg py-2">
