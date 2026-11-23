@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import * as turf from '@turf/turf';
 import {
-  Waves, Play, Loader2, CheckCircle2, Info, AlertCircle, Pencil, Upload,
+  Waves, Loader2, CheckCircle2, Info, AlertCircle, Pencil, Upload,
   RotateCcw, History, ChevronDown, Save, Mountain, Layers, TrendingUp, Gauge,
   Building2, Route, Download, Home, ShieldAlert, Box, FileUp, Grid3x3, Wind,
 } from 'lucide-react';
