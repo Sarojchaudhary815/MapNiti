@@ -73,3 +73,6 @@ export const submitJob = async (toolId, payload) => (await API.post(`/analysis/j
 export const getJob = async (id) => (await API.get(`/analysis/jobs/${id}`)).data;
 export const getRunHistory = async (limit = 50) => (await API.get('/analysis/history', { params: { limit } })).data.runs;
 export const deleteRun = async (id) => (await API.delete(`/analysis/history/${id}`)).data;
+
+// Live Nepal feeds (BIPAD / DHM): rivers, rainfall, incidents
+export const getLiveFeed = async (kind, params = {}) => (await API.get(`/realtime/${kind}`, { params, timeout: 120000 })).data;

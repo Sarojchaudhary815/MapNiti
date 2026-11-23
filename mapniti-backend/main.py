@@ -11,7 +11,7 @@ from app.models.article import Article  # noqa: F401 registers table for create_
 from app.models.analysis_run import AnalysisRun  # noqa: F401 registers table for create_all
 from app.services.analysis_jobs import recover_on_startup
 from app.api import (website, hydrology, urban, agriculture, disaster, data_mgmt, auth, projects, admin, raster,
-                     gee, engineering, ai, learn, analysis, downloads, articles)
+                     gee, engineering, ai, learn, analysis, downloads, articles, realtime)
 
 Base.metadata.create_all(bind=engine)
 run_migrations()
@@ -41,6 +41,7 @@ app.include_router(raster.router, prefix="/api/raster", tags=["Raster Analysis"]
 app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 app.include_router(projects.router, prefix="/api/projects", tags=["Projects"])
 app.include_router(admin.router, prefix="/api/admin", tags=["Admin"])
+app.include_router(realtime.router, prefix="/api/realtime", tags=["Live data"])
 app.include_router(gee.router, prefix="/api/gee", tags=["GEE Data Hub"])
 app.include_router(engineering.router, prefix="/api/engineering", tags=["Engineer Toolkit"])
 app.include_router(ai.router, prefix="/api/ai", tags=["AI Assistant"])

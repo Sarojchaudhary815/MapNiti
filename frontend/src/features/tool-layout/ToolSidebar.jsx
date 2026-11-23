@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, Building2, Zap, Droplets, Sprout, Database, LogOut, ChevronRight, ShieldCheck,
-  Globe2, HardHat, Sparkles, Download, GraduationCap
+  Globe2, HardHat, Sparkles, Download, GraduationCap, Radio
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, logoutUser } from '../../api/authApi';
@@ -28,6 +28,7 @@ export default function ToolSidebar({ activeModule, setActiveModule }) {
     { id: 'gee-hub', icon: <Globe2 size={18} />, label: 'GEE Data Hub' },
     { id: 'engineer', icon: <HardHat size={18} />, label: 'Engineer Toolkit' },
     { id: 'downloads', icon: <Download size={18} />, label: 'Data Download' },
+    { id: 'live', icon: <Radio size={18} />, label: 'Live Nepal' },
     { id: 'ai', icon: <Sparkles size={18} />, label: 'AI Assistant' },
     ...(user?.is_admin ? [{ id: 'admin', icon: <ShieldCheck size={18} />, label: 'Admin' }] : []),
   ];

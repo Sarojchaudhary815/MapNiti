@@ -19,12 +19,13 @@ import EngineerToolkit from '../engineering/EngineerToolkit';
 import AiAssistant from '../ai/AiAssistant';
 import DataDownload from '../downloads/DataDownload';
 import JobsTray from '../analysis/JobsTray';
+import LiveNepal from '../live/LiveNepal';
 
 // Full-page modules render instead of the map + tool panel.
 const FULL_PAGE_MODULES = ['dashboard', 'admin', 'ai'];
-const ALL_MODULES = ['dashboard', 'urban', 'disaster', 'hydrology', 'agriculture', 'data-management', 'gee-hub', 'engineer', 'downloads', 'ai', 'admin'];
+const ALL_MODULES = ['dashboard', 'urban', 'disaster', 'hydrology', 'agriculture', 'data-management', 'gee-hub', 'engineer', 'downloads', 'live', 'ai', 'admin'];
 
-const PANEL_TITLES = { 'gee-hub': 'GEE Data Hub', engineer: 'Engineer Toolkit', downloads: 'Data Download' };
+const PANEL_TITLES = { 'gee-hub': 'GEE Data Hub', engineer: 'Engineer Toolkit', downloads: 'Data Download', live: 'Live Nepal' };
 
 export default function ToolDashboard({ onRasterGenerated, rasterData, activeTool }) {
   // Deep links from the public website, e.g. /tool?module=downloads
@@ -198,6 +199,7 @@ export default function ToolDashboard({ onRasterGenerated, rasterData, activeToo
     if (activeModule === 'gee-hub') return <GeeDataHub {...commonProps} />;
     if (activeModule === 'engineer') return <EngineerToolkit {...commonProps} />;
     if (activeModule === 'downloads') return <DataDownload {...commonProps} />;
+    if (activeModule === 'live') return <LiveNepal {...commonProps} />;
     return null;
   };
 
