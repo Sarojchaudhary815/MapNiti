@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Loader2, Globe2, ImageOff, CheckCircle2, ExternalLink, AlertCircle } from 'lucide-react';
 import { publishArticle } from '../../api/hubApi';
 import ShareButtons from './ShareButtons';
@@ -53,7 +54,7 @@ export default function PublishArticleModal({ onClose, result, toolId, toolLabel
     }
   };
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[2100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4" onClick={onClose}>
       <div className="relative w-full max-w-xl max-h-[92vh] overflow-y-auto bg-white rounded-3xl shadow-2xl" onClick={(e) => e.stopPropagation()}>
         <div className="sticky top-0 z-10 flex items-center justify-between px-6 py-4 border-b bg-white/95 backdrop-blur">
@@ -136,6 +137,7 @@ export default function PublishArticleModal({ onClose, result, toolId, toolLabel
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

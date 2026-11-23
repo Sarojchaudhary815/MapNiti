@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Loader2, Play, Download, Save, AlertCircle, Info, ChevronDown, Layers, Globe2, FileText } from 'lucide-react';
+import { Loader2, Play, Download, Save, AlertCircle, Info, ChevronDown, Layers, Globe2, FileText, MoveHorizontal } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
 import AoiPicker from '../../components/common/AoiPicker';
 import MapLegend, { downloadCsv } from '../../components/common/MapLegend';
@@ -13,6 +13,7 @@ import { TOOL_CONFIGS } from './toolConfigs';
 import PublishArticleModal from '../articles/PublishArticleModal';
 import { buildReportHtml } from './analysisReport';
 import ReportPreview from './ReportPreview';
+import SwipeCompare from './SwipeCompare';
 import { getCurrentUser } from '../../api/authApi';
 
 const MODULE_OF = { urban: 'Urban Planning', disaster: 'Disaster Risk', agri: 'Agriculture', hydro: 'Hydrology' };
@@ -280,6 +281,7 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
 
   const [reporting, setReporting] = useState(false);
   const [reportHtml, setReportHtml] = useState('');
+  const [swipeOpen, setSwipeOpen] = useState(false);
   const report = async () => {
     setReporting(true);
     try {
@@ -375,6 +377,12 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
               <Save size={12} /> {saveMsg || `Save to "${projectInfo.name}"`}
             </button>
           )}
+          {result.layers?.length > 0 && !result.layers_expired && (
+            <button onClick={() => setSwipeOpen(true)}
+              className="w-full flex items-center justify-center gap-1.5 text-[12px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl py-2.5">
+              <MoveHorizontal size={14} /> Before / after swipe
+            </button>
+          )}
           <button onClick={report} disabled={reporting}
             className="w-full flex items-center justify-center gap-1.5 text-[12px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-60 rounded-xl py-2.5">
             {reporting ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />} PDF report
@@ -384,6 +392,10 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
             <Globe2 size={14} /> Publish as article &amp; share
           </button>
         </>
+      )}
+      {swipeOpen && result && (
+        <SwipeCompare onClose={() => setSwipeOpen(false)} toolId={toolId} cfg={cfg} values={values}
+          result={result} selectedAOI={selectedAOI} />
       )}
       {reportHtml && <ReportPreview html={reportHtml} onClose={() => setReportHtml('')} />}
       {publishOpen && result && (

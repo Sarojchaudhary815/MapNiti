@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { CheckCircle2, AlertCircle, Loader2, X, History, Trash2, Zap } from 'lucide-react';
 import { getRunHistory, deleteRun } from '../../api/hubApi';
 import { allJobs, subscribe, markSeen, forget, requestOpenRun, toolLabel, MODULE_OF_TOOL } from './jobStore';
@@ -15,7 +16,7 @@ function HistoryModal({ onClose, onOpen }) {
   const remove = async (id) => {
     try { await deleteRun(id); setRuns((r) => r.filter((x) => x.id !== id)); } catch (err) { setError(err.response?.data?.detail || 'Could not delete.'); }
   };
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[2100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4" onClick={onClose}>
       <div className="w-full max-w-2xl max-h-[85vh] flex flex-col bg-white rounded-3xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between px-6 py-4 border-b">
@@ -54,7 +55,8 @@ function HistoryModal({ onClose, onOpen }) {
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
 
