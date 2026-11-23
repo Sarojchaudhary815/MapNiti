@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Map as MapIcon, Menu, X, LogOut, ChevronDown, Sparkles, GraduationCap, Code2, Compass, Newspaper, Database, FileText, Terminal } from 'lucide-react';
 import { isAuthenticated, logoutUser } from '../api/authApi';
+import { useT, LanguageToggle } from '../i18n';
 
 const LogoImg = '/assets/MapNiti_logo_transparent.png';
 
@@ -28,6 +29,7 @@ const Navbar = () => {
   const [resOpen, setResOpen] = useState(false);
   const navigate = useNavigate();
   const loggedIn = isAuthenticated();
+  const t = useT();
 
   const handleLogout = () => {
     logoutUser();
@@ -40,7 +42,7 @@ const Navbar = () => {
     if (to === '/') window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
-  const anchorLinkClass = 'font-semibold text-[15px] text-slate-600 hover:text-theme-900 transition-colors';
+  const anchorLinkClass = 'whitespace-nowrap font-semibold text-[15px] text-slate-600 hover:text-theme-900 transition-colors';
 
   return (
     <nav className="sticky top-0 z-[1000] bg-white/95 backdrop-blur border-b border-slate-100 shadow-sm">
@@ -54,13 +56,13 @@ const Navbar = () => {
         <div className="hidden lg:flex gap-6 xl:gap-8 items-center font-sans">
           {navLinks.slice(0, 2).map((link) => (
             <Link key={link.to} to={link.to} onClick={() => handleNavLinkClick(link.to)} className={anchorLinkClass}>
-              {link.label}
+              {t(link.label)}
             </Link>
           ))}
 
           <div className="relative" onMouseEnter={() => setResOpen(true)} onMouseLeave={() => setResOpen(false)}>
             <button className={`${anchorLinkClass} flex items-center gap-1`} onClick={() => setResOpen((o) => !o)}>
-              Learn & Resources <ChevronDown size={15} />
+              {t('Learn & Resources')} <ChevronDown size={15} />
             </button>
             {resOpen && (
               <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-80">
@@ -69,8 +71,8 @@ const Navbar = () => {
                     <Link key={r.to} to={r.to} onClick={() => setResOpen(false)} className="flex items-start gap-3 p-3 rounded-xl hover:bg-theme-50">
                       <r.icon size={18} className="text-theme-700 mt-0.5 shrink-0" />
                       <span>
-                        <span className="block text-[14px] font-bold text-slate-800">{r.label}</span>
-                        <span className="block text-[12px] text-slate-500">{r.desc}</span>
+                        <span className="block text-[14px] font-bold text-slate-800">{t(r.label)}</span>
+                        <span className="block text-[12px] text-slate-500">{t(r.desc)}</span>
                       </span>
                     </Link>
                   ))}
@@ -81,13 +83,14 @@ const Navbar = () => {
 
           {navLinks.slice(2).map((link) => (
             <Link key={link.to} to={link.to} onClick={() => handleNavLinkClick(link.to)} className={anchorLinkClass}>
-              {link.label}
+              {t(link.label)}
             </Link>
           ))}
 
           <Link to="/ai" className="flex items-center gap-1.5 text-[14px] font-bold text-violet-700 bg-violet-50 hover:bg-violet-100 px-4 py-2 rounded-full">
             <Sparkles size={15} /> AI
           </Link>
+          <LanguageToggle compact />
 
           {loggedIn ? (
             <div className="flex items-center gap-3">
@@ -96,11 +99,11 @@ const Navbar = () => {
                 className="bg-theme-700 text-white px-6 py-2 rounded-full flex items-center gap-2 hover:bg-theme-900 transition-all shadow-md font-bold text-[14px]"
               >
                 <MapIcon size={18} />
-                MapNiti Tool
+                {t('MapNiti Tool')}
               </Link>
               <button
                 onClick={handleLogout}
-                title="Logout"
+                title={t('Logout')}
                 className="text-slate-400 hover:text-red-500 transition-colors p-2"
               >
                 <LogOut size={18} />
@@ -111,7 +114,7 @@ const Navbar = () => {
               to="/login"
               className="border border-theme-700 text-theme-700 px-6 py-2 rounded-full font-bold text-[14px] hover:bg-theme-900 hover:text-white hover:border-theme-900 transition-all"
             >
-              Login
+              {t('Login')}
             </Link>
           )}
         </div>
@@ -136,9 +139,10 @@ const Navbar = () => {
               onClick={() => handleNavLinkClick(link.to)}
               className="py-3 font-semibold text-[15px] border-b border-slate-50 text-slate-600"
             >
-              {link.label}
+              {t(link.label)}
             </Link>
           ))}
+          <div className="py-3"><LanguageToggle /></div>
 
           {loggedIn ? (
             <>

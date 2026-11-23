@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { FaLinkedinIn, FaGlobe } from "react-icons/fa";
 import { isAuthenticated } from "../api/authApi";
+import { useT } from "../i18n";
 import { sendContact } from "../api/websiteApi";
 import FloatingField from "../components/FloatingField";
 import { CASE_STUDIES } from "../features/casestudies/caseStudies";
@@ -336,6 +337,7 @@ const HomeContactSection = () => {
 export default function Home() {
   const location = useLocation();
   const loggedIn = isAuthenticated();
+  const t = useT();
 
   useEffect(() => {
     if (location.hash) {
@@ -359,7 +361,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="mb-2"
           >
-            <h2 className="font-bold text-sm tracking-[0.3em] uppercase text-theme-300">Hello, Engineer's</h2>
+            <h2 className="font-bold text-sm tracking-[0.3em] uppercase text-theme-300">{t("Hello, Engineer's")}</h2>
           </motion.div>
 
           <motion.h1
@@ -368,7 +370,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="font-display text-4xl md:text-6xl font-black mb-6 leading-tight tracking-tight"
           >
-            <span className="block text-[#F5F5F0]">Welcome to</span>
+            <span className="block text-[#F5F5F0]">{t('Welcome to')}</span>
             <span className="text-white">MapNiti</span>
           </motion.h1>
 
@@ -378,8 +380,7 @@ export default function Home() {
             transition={{ duration: 1, delay: 0.5 }}
             className="text-lg md:text-xl text-white/80 mb-10 max-w-xl leading-relaxed"
           >
-            A complete GIS and remote sensing platform for hydrology, disaster risk,
-            urban planning, and agriculture analysis, powered by Google Earth Engine.
+            {t('A complete GIS and remote sensing platform for hydrology, disaster risk, urban planning, and agriculture analysis, powered by Google Earth Engine.')}
           </motion.p>
 
           <motion.div
@@ -391,7 +392,7 @@ export default function Home() {
               to={loggedIn ? "/tool" : "/register"}
               className="inline-flex items-center gap-2 bg-pop-500 text-white px-8 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-pop-600 transition-all shadow-[0_10px_30px_-8px_rgba(242,153,74,0.6)] hover:shadow-[0_10px_30px_-8px_rgba(217,130,47,0.7)]"
             >
-              Get Started
+              {t('Get Started')}
             </Link>
           </motion.div>
         </div>

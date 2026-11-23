@@ -44,3 +44,6 @@ code {
   z-index: 1;
   background: #242424;
 }
+
+/* Nepali (Devanagari): wide letter-spacing splits conjuncts, and capitals don't exist. */
+html[lang="ne"] [class*="tracking-"] { letter-spacing: normal !important; }

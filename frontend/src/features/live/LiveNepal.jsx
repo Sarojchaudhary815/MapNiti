@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Waves, CloudRain, Siren, RefreshCw, Loader2, AlertTriangle, ExternalLink } from 'lucide-react';
 import { getLiveFeed } from '../../api/hubApi';
+import { useT } from '../../i18n';
 
 const REFRESH_MS = 5 * 60 * 1000;
 const FEEDS = [
@@ -20,6 +21,7 @@ export default function LiveNepal({ setVectorLayers, mapRef }) {
   const [data, setData] = useState({});
   const [busy, setBusy] = useState({});
   const [errors, setErrors] = useState({});
+  const t = useT();
 
   const load = useCallback(async (kind) => {
     setBusy((b) => ({ ...b, [kind]: true }));
@@ -63,7 +65,7 @@ export default function LiveNepal({ setVectorLayers, mapRef }) {
   return (
     <div className="p-5 space-y-4">
       <div className="border-b pb-4">
-        <h2 className="text-lg font-black text-slate-800 uppercase tracking-tight">Live Nepal</h2>
+        <h2 className="text-lg font-black text-slate-800 uppercase tracking-tight">{t('Live Nepal')}</h2>
         <p className="text-[10px] font-bold uppercase tracking-widest mt-1 text-red-600">Rivers · rain · incidents · every 5 min</p>
       </div>
 
@@ -72,7 +74,7 @@ export default function LiveNepal({ setVectorLayers, mapRef }) {
           <div className="flex items-center gap-3">
             <f.icon size={18} className={f.color} />
             <div className="flex-1 min-w-0">
-              <p className="text-[13px] font-bold text-slate-700">{f.label}</p>
+              <p className="text-[13px] font-bold text-slate-700">{t(f.label)}</p>
               <p className="text-[10px] text-slate-400">
                 {f.note}{data[f.id]?.updated ? ` · updated ${fmtTime(data[f.id].updated)}` : ''}
               </p>
@@ -93,12 +95,12 @@ export default function LiveNepal({ setVectorLayers, mapRef }) {
           {on[f.id] && f.id === 'rivers' && r && (
             <div className="mt-3 space-y-2">
               <div className="grid grid-cols-3 gap-1.5 text-center">
-                <div className="rounded-lg bg-slate-50 py-1.5"><p className="text-[15px] font-black text-slate-800">{r.summary.stations}</p><p className="text-[9px] uppercase text-slate-400">stations</p></div>
-                <div className="rounded-lg bg-amber-50 py-1.5"><p className="text-[15px] font-black text-amber-600">{r.summary.warning}</p><p className="text-[9px] uppercase text-amber-500">warning</p></div>
-                <div className="rounded-lg bg-red-50 py-1.5"><p className="text-[15px] font-black text-red-600">{r.summary.danger}</p><p className="text-[9px] uppercase text-red-500">danger</p></div>
+                <div className="rounded-lg bg-slate-50 py-1.5"><p className="text-[15px] font-black text-slate-800">{r.summary.stations}</p><p className="text-[9px] uppercase text-slate-400">{t('stations')}</p></div>
+                <div className="rounded-lg bg-amber-50 py-1.5"><p className="text-[15px] font-black text-amber-600">{r.summary.warning}</p><p className="text-[9px] uppercase text-amber-500">{t('warning')}</p></div>
+                <div className="rounded-lg bg-red-50 py-1.5"><p className="text-[15px] font-black text-red-600">{r.summary.danger}</p><p className="text-[9px] uppercase text-red-500">{t('danger')}</p></div>
               </div>
               {r.alerts.length === 0
-                ? <p className="text-[11px] text-emerald-600">All rivers are below their warning level.</p>
+                ? <p className="text-[11px] text-emerald-600">{t('All rivers are below their warning level.')}</p>
                 : r.alerts.map((a) => (
                   <button key={a.name} onClick={() => flyTo('rivers', a.name)} className="w-full flex items-center gap-2 text-left rounded-lg px-2 py-1.5 hover:bg-slate-50">
                     <AlertTriangle size={13} style={{ color: a.color }} className="shrink-0" />
@@ -144,7 +146,7 @@ export default function LiveNepal({ setVectorLayers, mapRef }) {
                 <>
                   <div className="grid grid-cols-4 gap-1 text-center">
                     {[['incidents', 'text-slate-800'], ['deaths', 'text-red-600'], ['injured', 'text-amber-600'], ['missing', 'text-slate-600']].map(([k, c]) => (
-                      <div key={k} className="rounded-lg bg-slate-50 py-1.5"><p className={`text-[14px] font-black ${c}`}>{inc.summary[k]}</p><p className="text-[9px] uppercase text-slate-400">{k}</p></div>
+                      <div key={k} className="rounded-lg bg-slate-50 py-1.5"><p className={`text-[14px] font-black ${c}`}>{inc.summary[k]}</p><p className="text-[9px] uppercase text-slate-400">{t(k)}</p></div>
                     ))}
                   </div>
                   <div className="space-y-0.5">

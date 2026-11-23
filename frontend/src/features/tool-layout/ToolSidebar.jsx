@@ -6,11 +6,13 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, logoutUser } from '../../api/authApi';
 import ProfileEditModal, { avatarUrl } from './ProfileEditModal';
+import { useT, LanguageToggle } from '../../i18n';
 
 export default function ToolSidebar({ activeModule, setActiveModule }) {
   const navigate = useNavigate();
   const [user, setUser] = useState(getCurrentUser());
   const [profileOpen, setProfileOpen] = useState(false);
+  const t = useT();
 
   const handleLogout = () => {
     logoutUser();
@@ -54,7 +56,7 @@ export default function ToolSidebar({ activeModule, setActiveModule }) {
             <button
               key={item.id}
               onClick={() => setActiveModule(item.id)}
-              title={item.label}
+              title={t(item.label)}
               className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl transition-all ${
                 activeModule === item.id
                 ? 'bg-white text-[#0047AB] shadow-lg font-bold'
@@ -63,7 +65,7 @@ export default function ToolSidebar({ activeModule, setActiveModule }) {
             >
               <span className="shrink-0">{item.icon}</span>
               <span className="text-sm tracking-tight whitespace-nowrap overflow-hidden max-w-0 group-hover:max-w-[160px] transition-all duration-300">
-                {item.label}
+                {t(item.label)}
               </span>
               {activeModule === item.id && (
                 <ChevronRight size={14} className="text-[#0047AB] ml-auto hidden group-hover:block shrink-0" />
@@ -76,9 +78,10 @@ export default function ToolSidebar({ activeModule, setActiveModule }) {
           className="mt-3 w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-yellow-300/90 hover:bg-white/10 hover:text-yellow-200 transition-all">
           <span className="shrink-0"><GraduationCap size={18} /></span>
           <span className="text-sm tracking-tight whitespace-nowrap overflow-hidden max-w-0 group-hover:max-w-[160px] transition-all duration-300">
-            Learn & Guides ↗
+            {t('Learn & Guides')} ↗
           </span>
         </a>
+        <div className="mt-3 px-2 hidden group-hover:block"><LanguageToggle dark /></div>
       </div>
 
       {/* --- PROFILE WIDGET --- */}

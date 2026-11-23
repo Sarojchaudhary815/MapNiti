@@ -14,6 +14,7 @@ import PublishArticleModal from '../articles/PublishArticleModal';
 import { buildReportHtml } from './analysisReport';
 import ReportPreview from './ReportPreview';
 import SwipeCompare from './SwipeCompare';
+import { useT } from '../../i18n';
 import { getCurrentUser } from '../../api/authApi';
 
 const MODULE_OF = { urban: 'Urban Planning', disaster: 'Disaster Risk', agri: 'Agriculture', hydro: 'Hydrology' };
@@ -180,6 +181,7 @@ export function ResultView({ result, toolId, opacity, setOpacity }) {
 
 export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, onStartDrawing, setMapLayers, setVectorLayers, projectInfo, mapRef }) {
   const cfg = TOOL_CONFIGS[toolId];
+  const t = useT();
   const [values, setValues] = useState(() => defaultsFor(cfg));
   // The run itself lives in jobStore, so it survives switching tools; this panel
   // just follows the job it started (or the one still running for this tool).
@@ -315,7 +317,7 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
     <div className="p-5 space-y-4">
       <p className="text-[11px] text-slate-500 leading-relaxed">{cfg.desc}</p>
       <button onClick={() => setShowHow((s) => !s)} className="w-full flex items-center justify-between text-[10px] font-bold text-slate-500 bg-slate-50 rounded-lg px-3 py-2">
-        How to use · data sources <ChevronDown size={12} className={showHow ? 'rotate-180' : ''} />
+        {t('How to use · data sources')} <ChevronDown size={12} className={showHow ? 'rotate-180' : ''} />
       </button>
       {showHow && (
         <div className="text-[10px] text-slate-600 space-y-1 px-1">
@@ -339,7 +341,7 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
       <button onClick={run} disabled={!selectedAOI || loading}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[12px] font-black text-white bg-[#0047AB] hover:bg-blue-800 disabled:opacity-40">
         {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
-        {loading ? `Running on Earth Engine… ${fmtElapsed(elapsed)}` : selectedAOI ? 'Run analysis' : 'Select an AOI first'}
+        {loading ? `${t('Running on Earth Engine…')} ${fmtElapsed(elapsed)}` : selectedAOI ? t('Run analysis') : t('Select an AOI first')}
       </button>
       {loading && (
         <div className="space-y-1.5">
@@ -368,7 +370,7 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
                   ? 'Saved result: the map layer has expired. Run again to see it on the map.'
                   : `Instant result from the cache (computed ${new Date(result.computed_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })}).`}
               </span>
-              <button onClick={() => run(true)} disabled={loading} className="font-bold underline shrink-0">Run again</button>
+              <button onClick={() => run(true)} disabled={loading} className="font-bold underline shrink-0">{t('Run again')}</button>
             </div>
           )}
           <ResultView result={result} toolId={toolId} opacity={opacity} setOpacity={setOpacity} />
@@ -380,16 +382,16 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
           {result.layers?.length > 0 && !result.layers_expired && (
             <button onClick={() => setSwipeOpen(true)}
               className="w-full flex items-center justify-center gap-1.5 text-[12px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl py-2.5">
-              <MoveHorizontal size={14} /> Before / after swipe
+              <MoveHorizontal size={14} /> {t('Before / after swipe')}
             </button>
           )}
           <button onClick={report} disabled={reporting}
             className="w-full flex items-center justify-center gap-1.5 text-[12px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-60 rounded-xl py-2.5">
-            {reporting ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />} PDF report
+            {reporting ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />} {t('PDF report')}
           </button>
           <button onClick={() => setPublishOpen(true)}
             className="w-full flex items-center justify-center gap-1.5 text-[12px] font-black text-white bg-gradient-to-r from-[#0047AB] to-[#1877F2] hover:opacity-90 rounded-xl py-2.5">
-            <Globe2 size={14} /> Publish as article &amp; share
+            <Globe2 size={14} /> {t('Publish as article & share')}
           </button>
         </>
       )}

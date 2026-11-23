@@ -3,12 +3,14 @@ import { createPortal } from 'react-dom';
 import { CheckCircle2, AlertCircle, Loader2, X, History, Trash2, Zap } from 'lucide-react';
 import { getRunHistory, deleteRun } from '../../api/hubApi';
 import { allJobs, subscribe, markSeen, forget, requestOpenRun, toolLabel, MODULE_OF_TOOL } from './jobStore';
+import { useT } from '../../i18n';
 
 const fmtTime = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
 const fmtDate = (iso) => (iso ? new Date(iso).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : '');
 const isActive = (j) => j.status === 'queued' || j.status === 'running';
 
 function HistoryModal({ onClose, onOpen }) {
+  const t = useT();
   const [runs, setRuns] = useState(null);
   const [error, setError] = useState('');
   const load = () => getRunHistory(100).then(setRuns).catch(() => setError('Could not load your history.'));
@@ -20,7 +22,7 @@ function HistoryModal({ onClose, onOpen }) {
     <div className="fixed inset-0 z-[2100] flex items-center justify-center bg-slate-900/50 backdrop-blur-sm p-4" onClick={onClose}>
       <div className="w-full max-w-2xl max-h-[85vh] flex flex-col bg-white rounded-3xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between px-6 py-4 border-b">
-          <div className="flex items-center gap-2"><History size={18} className="text-[#0047AB]" /><h3 className="font-black text-slate-800">Analysis history</h3></div>
+          <div className="flex items-center gap-2"><History size={18} className="text-[#0047AB]" /><h3 className="font-black text-slate-800">{t('Analysis history')}</h3></div>
           <button onClick={onClose} className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100"><X size={18} /></button>
         </div>
         <div className="flex-1 overflow-y-auto p-4">
@@ -45,7 +47,7 @@ function HistoryModal({ onClose, onOpen }) {
                   </p>
                 </div>
                 {r.status === 'done' && (
-                  <button onClick={() => onOpen(r.tool_id, r.id)} className="shrink-0 text-[12px] font-bold text-white bg-[#0047AB] hover:bg-blue-800 rounded-lg px-3 py-1.5">Open</button>
+                  <button onClick={() => onOpen(r.tool_id, r.id)} className="shrink-0 text-[12px] font-bold text-white bg-[#0047AB] hover:bg-blue-800 rounded-lg px-3 py-1.5">{t('Open')}</button>
                 )}
                 {r.status !== 'queued' && r.status !== 'running' && (
                   <button onClick={() => remove(r.id)} title="Remove from history" className="shrink-0 p-1.5 rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50"><Trash2 size={14} /></button>
@@ -66,6 +68,7 @@ function HistoryModal({ onClose, onOpen }) {
  * `onOpenModule(moduleId)` switches the dashboard to the tool's module.
  */
 export default function JobsTray({ onOpenModule }) {
+  const t = useT();
   const [, rerender] = useReducer((x) => x + 1, 0);
   const [historyOpen, setHistoryOpen] = useState(false);
   useEffect(() => subscribe(rerender), []);
@@ -92,10 +95,10 @@ export default function JobsTray({ onOpenModule }) {
           <div key={j.id} className={`pointer-events-auto flex items-center gap-2 rounded-xl shadow-xl border px-3 py-2 text-[12px] bg-white ${j.status === 'done' ? 'border-emerald-200' : 'border-red-200'}`}>
             {j.status === 'done' ? <CheckCircle2 size={15} className="text-emerald-500 shrink-0" /> : <AlertCircle size={15} className="text-red-500 shrink-0" />}
             <span className="min-w-0 truncate">
-              <b>{j.label}</b>{j.aoiName ? ` · ${j.aoiName}` : ''} {j.status === 'done' ? 'is ready' : 'failed'}
+              <b>{j.label}</b>{j.aoiName ? ` · ${j.aoiName}` : ''} {j.status === 'done' ? t('is ready') : t('failed')}
             </span>
             {j.status === 'done' && (
-              <button onClick={() => { markSeen(j.id); open(j.toolId, j.id); }} className="font-bold text-[#0047AB] hover:underline shrink-0">Open</button>
+              <button onClick={() => { markSeen(j.id); open(j.toolId, j.id); }} className="font-bold text-[#0047AB] hover:underline shrink-0">{t('Open')}</button>
             )}
             <button onClick={() => forget(j.id)} className="text-slate-400 hover:text-slate-700 shrink-0"><X size={13} /></button>
           </div>
@@ -109,8 +112,8 @@ export default function JobsTray({ onOpenModule }) {
         ))}
         <button onClick={() => setHistoryOpen(true)}
           className="pointer-events-auto flex items-center gap-1.5 rounded-xl bg-white/95 hover:bg-white shadow-lg border border-slate-200 px-3 py-2 text-[11px] font-bold text-slate-700">
-          <History size={13} /> History
-          {running.length > 0 && <span className="flex items-center gap-0.5 text-blue-600"><Zap size={11} />{running.length} running</span>}
+          <History size={13} /> {t('History')}
+          {running.length > 0 && <span className="flex items-center gap-0.5 text-blue-600"><Zap size={11} />{running.length} {t('running')}</span>}
         </button>
       </div>
       {historyOpen && <HistoryModal onClose={() => setHistoryOpen(false)} onOpen={open} />}

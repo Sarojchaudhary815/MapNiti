@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pencil, Upload, CheckCircle2, X, Landmark, Loader2, Search } from 'lucide-react';
 import { getAdminIndex, getAdminFeature, getPalikaWards } from '../../api/hubApi';
+import { useT } from '../../i18n';
 
 // Draw-or-upload-or-pick AOI control shared by every analysis / download tool.
 export function parseGeoJsonBoundary(text) {
@@ -37,6 +38,7 @@ const wardCache = {};
  * every palika and district. The deepest chosen level becomes the AOI.
  */
 function BoundaryPicker({ onPick, onClose }) {
+  const t = useT();
   const [idx, setIdx] = useState(indexCache);
   const [error, setError] = useState('');
   const [prov, setProv] = useState('');
@@ -123,7 +125,7 @@ function BoundaryPicker({ onPick, onClose }) {
   return (
     <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
       <div className="flex items-center justify-between">
-        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Nepal boundaries</p>
+        <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{t('Nepal boundaries')}</p>
         <button onClick={onClose} className="text-slate-400 hover:text-slate-700"><X size={13} /></button>
       </div>
       {!idx && !error && <p className="text-[10px] text-slate-500 flex items-center gap-1"><Loader2 size={11} className="animate-spin" /> Loading 753 palikas…</p>}
@@ -132,7 +134,7 @@ function BoundaryPicker({ onPick, onClose }) {
         <>
           <div className="relative">
             <Search size={12} className="absolute left-2 top-2 text-slate-400" />
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search a palika or district…"
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('Search a palika or district…')}
               className="w-full pl-7 pr-2 py-1.5 text-[11px] border border-slate-200 rounded-lg" />
           </div>
           {hits.length > 0 && (
@@ -146,16 +148,16 @@ function BoundaryPicker({ onPick, onClose }) {
             </div>
           )}
           <select aria-label="Province" className={sel} value={prov} onChange={(e) => { setProv(e.target.value); setDist(''); choosePalika(''); }}>
-            <option value="">Province…</option>
+            <option value="">{t('Province…')}</option>
             {idx.provinces.map((p) => <option key={p.i} value={p.i}>{p.name}</option>)}
           </select>
           <select aria-label="District" className={sel} value={dist}
             onChange={(e) => { const v = e.target.value; setDist(v); choosePalika(''); if (v !== '') setProv(provOf(idx.districts[v].province)); }}>
-            <option value="">District…</option>
+            <option value="">{t('District…')}</option>
             {districts.map((d) => <option key={d.i} value={d.i}>{d.name}</option>)}
           </select>
           <select aria-label="Palika" className={sel} value={pal} disabled={dist === ''} onChange={(e) => choosePalika(e.target.value)}>
-            <option value="">Palika (local level)…</option>
+            <option value="">{t('Palika (local level)…')}</option>
             {palikas.map((p) => <option key={p.i} value={p.i}>{p.name} · {p.type}</option>)}
           </select>
           {palInfo && (wards ? (
@@ -185,6 +187,7 @@ function BoundaryPicker({ onPick, onClose }) {
 }
 
 export default function AoiPicker({ selectedAOI, setSelectedAOI, onStartDrawing }) {
+  const t = useT();
   const fileRef = useRef(null);
   const [error, setError] = useState('');
   const [picking, setPicking] = useState(false);
@@ -210,9 +213,9 @@ export default function AoiPicker({ selectedAOI, setSelectedAOI, onStartDrawing 
       <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50 border border-emerald-100">
         <div className="flex items-center gap-2 text-emerald-700 text-[11px] font-bold min-w-0">
           <CheckCircle2 size={14} className="shrink-0" />
-          <span className="truncate">{selectedAOI.name ? `AOI: ${selectedAOI.name}` : 'Area of interest selected'}</span>
+          <span className="truncate">{selectedAOI.name ? `AOI: ${selectedAOI.name}` : t('Area of interest selected')}</span>
         </div>
-        <button onClick={() => setSelectedAOI(null)} className="p-1 text-emerald-600 hover:text-red-500" title="Clear AOI">
+        <button onClick={() => setSelectedAOI(null)} className="p-1 text-emerald-600 hover:text-red-500" title={t('Clear AOI')}>
           <X size={14} />
         </button>
       </div>
@@ -224,7 +227,7 @@ export default function AoiPicker({ selectedAOI, setSelectedAOI, onStartDrawing 
       <div className="grid grid-cols-3 gap-2">
         <button onClick={onStartDrawing}
           className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-bold text-white bg-[#0047AB] hover:bg-blue-800 transition-colors">
-          <Pencil size={12} /> Draw
+          <Pencil size={12} /> {t('Draw')}
         </button>
         <button onClick={() => fileRef.current?.click()}
           className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors">
@@ -232,7 +235,7 @@ export default function AoiPicker({ selectedAOI, setSelectedAOI, onStartDrawing 
         </button>
         <button onClick={() => setPicking((p) => !p)}
           className="flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-[11px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 transition-colors">
-          <Landmark size={12} /> Nepal
+          <Landmark size={12} /> {t('Nepal')}
         </button>
         <input ref={fileRef} type="file" accept=".geojson,.json" className="hidden" onChange={onFile} />
       </div>
