@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Loader2, Play, Download, Save, AlertCircle, Info, ChevronDown, Layers, Globe2 } from 'lucide-react';
+import { Loader2, Play, Download, Save, AlertCircle, Info, ChevronDown, Layers, Globe2, FileText } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
 import AoiPicker from '../../components/common/AoiPicker';
 import MapLegend, { downloadCsv } from '../../components/common/MapLegend';
@@ -7,6 +7,9 @@ import { runAnalysis } from '../../api/hubApi';
 import { saveResult } from '../../api/projectApi';
 import { TOOL_CONFIGS } from './toolConfigs';
 import PublishArticleModal from '../articles/PublishArticleModal';
+import { buildReportHtml } from './analysisReport';
+import ReportPreview from './ReportPreview';
+import { getCurrentUser } from '../../api/authApi';
 
 const MODULE_OF = { urban: 'Urban Planning', disaster: 'Disaster Risk', agri: 'Agriculture', hydro: 'Hydrology' };
 
@@ -230,6 +233,26 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
     }
   };
 
+  const [reporting, setReporting] = useState(false);
+  const [reportHtml, setReportHtml] = useState('');
+  const report = async () => {
+    setReporting(true);
+    try {
+      const image = await mapRef?.current?.snapshot?.({ bbox: selectedAOI?.bbox });
+      const params = (cfg?.params || []).map((p) => {
+        const v = values[p.key];
+        const opt = p.options?.find((o) => String(o.value) === String(v));
+        return { label: p.label, value: opt ? opt.label : v };
+      });
+      setReportHtml(buildReportHtml({
+        result, toolLabel: cfg?.label || toolId, aoi: selectedAOI, image, params,
+        author: getCurrentUser()?.full_name, project: projectInfo?.name,
+      }));
+    } finally {
+      setReporting(false);
+    }
+  };
+
   const save = async () => {
     try {
       const { layers, vectors, ...rest } = result;
@@ -297,12 +320,17 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
               <Save size={12} /> {saveMsg || `Save to "${projectInfo.name}"`}
             </button>
           )}
+          <button onClick={report} disabled={reporting}
+            className="w-full flex items-center justify-center gap-1.5 text-[12px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 disabled:opacity-60 rounded-xl py-2.5">
+            {reporting ? <Loader2 size={14} className="animate-spin" /> : <FileText size={14} />} PDF report
+          </button>
           <button onClick={() => setPublishOpen(true)}
             className="w-full flex items-center justify-center gap-1.5 text-[12px] font-black text-white bg-gradient-to-r from-[#0047AB] to-[#1877F2] hover:opacity-90 rounded-xl py-2.5">
             <Globe2 size={14} /> Publish as article &amp; share
           </button>
         </>
       )}
+      {reportHtml && <ReportPreview html={reportHtml} onClose={() => setReportHtml('')} />}
       {publishOpen && result && (
         <PublishArticleModal onClose={() => setPublishOpen(false)} result={result} toolId={toolId}
           toolLabel={cfg?.label} module={MODULE_OF[toolId.split('-')[0]]}

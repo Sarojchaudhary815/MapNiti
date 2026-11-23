@@ -272,18 +272,26 @@ const MapWindow = forwardRef(({
     // JPEG data URL of the current map (base map + result layers + AOI), framed
     // on `bbox` when given. Used for published articles and PDF reports. Every
     // tile source here sends CORS headers, so the canvas is never "tainted".
-    snapshot: ({ bbox, maxWidth = 1400, quality = 0.85 } = {}) => new Promise((resolve) => {
+    // The picture is cropped to `aspect` (width / height, 4:3 by default) around
+    // the map centre, and the AOI is framed inside that crop.
+    snapshot: ({ bbox, maxWidth = 1400, quality = 0.85, aspect = 4 / 3 } = {}) => new Promise((resolve) => {
       const map = mapRef.current;
       if (!map) return resolve(null);
+      const box = map.getContainer().getBoundingClientRect();
+      const cropH = Math.min(box.height, box.width / aspect);
+      const cropW = Math.min(box.width, box.height * aspect);
       const capture = () => {
         map.once('render', () => {
           try {
             const src = map.getCanvas();
-            const scale = Math.min(1, maxWidth / src.width);
+            const k = src.width / box.width; // device pixels per CSS pixel
+            const sw = cropW * k;
+            const sh = cropH * k;
+            const scale = Math.min(1, maxWidth / sw);
             const out = document.createElement('canvas');
-            out.width = Math.round(src.width * scale);
-            out.height = Math.round(src.height * scale);
-            out.getContext('2d').drawImage(src, 0, 0, out.width, out.height);
+            out.width = Math.round(sw * scale);
+            out.height = Math.round(sh * scale);
+            out.getContext('2d').drawImage(src, (src.width - sw) / 2, (src.height - sh) / 2, sw, sh, 0, 0, out.width, out.height);
             resolve(out.toDataURL('image/jpeg', quality));
           } catch (err) {
             console.warn('Map snapshot failed:', err);
@@ -293,7 +301,10 @@ const MapWindow = forwardRef(({
         map.triggerRepaint();
       };
       if (bbox) {
-        map.fitBounds([[bbox.west, bbox.south], [bbox.east, bbox.north]], { padding: 40, duration: 0 });
+        const padV = 40 + (box.height - cropH) / 2;
+        const padH = 40 + (box.width - cropW) / 2;
+        map.fitBounds([[bbox.west, bbox.south], [bbox.east, bbox.north]],
+          { padding: { top: padV, bottom: padV, left: padH, right: padH }, duration: 0 });
         let done = false;
         const go = () => { if (!done) { done = true; capture(); } };
         map.once('idle', go);
