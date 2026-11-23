@@ -17,6 +17,7 @@ secrets/
 mapniti-backend/static/avatars/
 mapniti-backend/static/resumes/
 mapniti-backend/static/boundaries/
+mapniti-backend/static/articles/
 mapniti-backend/data/temp/
 
 # ---- Python ----

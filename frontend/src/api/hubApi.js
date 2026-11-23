@@ -55,3 +55,10 @@ export const downloadGeeVector = async (payload) => (await API.post('/downloads/
 export const getBoundaries = async (country = 'NPL') => (await API.get(`/downloads/boundaries/${country}`)).data;
 export const getBoundaryGeojson = async (level, country = 'NPL') =>
   (await API.get(`/downloads/boundaries/${country}/${level}`, { timeout: 180000 })).data;
+
+// ---- Community articles (published analyses) ----
+export const publishArticle = async (payload) => (await API.post('/articles', payload)).data;
+export const listArticles = async (limit = 30) => (await API.get('/articles', { params: { limit } })).data;
+export const getArticle = async (slug) => (await API.get(`/articles/${slug}`)).data;
+export const myArticles = async () => (await API.get('/articles/mine')).data;
+export const deleteArticle = async (slug) => (await API.delete(`/articles/${slug}`)).data;

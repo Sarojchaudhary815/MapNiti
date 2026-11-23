@@ -269,6 +269,40 @@ const MapWindow = forwardRef(({
   }, [mapReady]);
 
   useImperativeHandle(ref, () => ({
+    // JPEG data URL of the current map (base map + result layers + AOI), framed
+    // on `bbox` when given. Used for published articles and PDF reports. Every
+    // tile source here sends CORS headers, so the canvas is never "tainted".
+    snapshot: ({ bbox, maxWidth = 1400, quality = 0.85 } = {}) => new Promise((resolve) => {
+      const map = mapRef.current;
+      if (!map) return resolve(null);
+      const capture = () => {
+        map.once('render', () => {
+          try {
+            const src = map.getCanvas();
+            const scale = Math.min(1, maxWidth / src.width);
+            const out = document.createElement('canvas');
+            out.width = Math.round(src.width * scale);
+            out.height = Math.round(src.height * scale);
+            out.getContext('2d').drawImage(src, 0, 0, out.width, out.height);
+            resolve(out.toDataURL('image/jpeg', quality));
+          } catch (err) {
+            console.warn('Map snapshot failed:', err);
+            resolve(null);
+          }
+        });
+        map.triggerRepaint();
+      };
+      if (bbox) {
+        map.fitBounds([[bbox.west, bbox.south], [bbox.east, bbox.north]], { padding: 40, duration: 0 });
+        let done = false;
+        const go = () => { if (!done) { done = true; capture(); } };
+        map.once('idle', go);
+        setTimeout(go, 8000); // tiles still loading after 8 s: take what is there
+      } else {
+        capture();
+      }
+      return undefined;
+    }),
     startDrawing: () => {
       if (drawRef.current && !isLockedRef.current) {
         drawRef.current.deleteAll();

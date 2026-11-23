@@ -6,6 +6,8 @@ import {
 } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 import { CASE_STUDIES, caseStudyBySlug } from '../../features/casestudies/caseStudies';
+import { CommunityList, CommunityArticle } from '../../features/articles/CommunityArticles';
+import ShareButtons from '../../features/articles/ShareButtons';
 
 const ICONS = { droplets: Droplets, building: Building2, zap: Zap };
 
@@ -47,6 +49,7 @@ function CaseList() {
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-6">
         {CASE_STUDIES.map((c) => <CaseCard key={c.slug} c={c} />)}
       </div>
+      <CommunityList />
       <ShareYours />
     </div>
   );
@@ -78,10 +81,10 @@ function ShareYours() {
       <div className="rounded-3xl bg-white border border-slate-100 p-8 flex flex-col md:flex-row md:items-center gap-4 justify-between">
         <div>
           <h3 className="text-lg font-black text-slate-800">Did an analysis on MapNiti?</h3>
-          <p className="text-sm text-slate-500 mt-1">Send us your study area, tools and results. Good studies are published here with your name.</p>
+          <p className="text-sm text-slate-500 mt-1">Run any tool, then press <b>Publish as article &amp; share</b> under the results. It appears here with your name and can be shared on Facebook.</p>
         </div>
-        <Link to="/contact" className="inline-flex items-center gap-2 bg-theme-700 hover:bg-theme-800 text-white px-5 py-3 rounded-xl text-sm font-bold shrink-0">
-          <Send size={15} /> Share your analysis
+        <Link to="/tool" className="inline-flex items-center gap-2 bg-theme-700 hover:bg-theme-800 text-white px-5 py-3 rounded-xl text-sm font-bold shrink-0">
+          <Send size={15} /> Publish your analysis
         </Link>
       </div>
     </div>
@@ -104,6 +107,7 @@ function CaseArticle({ c }) {
             <span className="flex items-center gap-1.5"><CalendarDays size={15} /> Run on {c.date}</span>
             <span className="flex items-center gap-1.5"><Clock size={15} /> {c.readMinutes} min read</span>
           </div>
+          <div className="mt-6"><ShareButtons shareUrl={`${window.location.origin}/case-studies/${c.slug}`} title={c.title} dark /></div>
         </div>
       </section>
 
@@ -225,12 +229,13 @@ export default function CaseStudiesPage() {
   const c = slug ? caseStudyBySlug(slug) : null;
   useEffect(() => { window.scrollTo(0, 0); }, [slug]);
   if (slug && !c) {
-    return (
+    const notFound = (
       <div className="max-w-3xl mx-auto px-6 py-24 text-center">
         <p className="text-slate-500">This case study was not found.</p>
         <Link to="/case-studies" className="text-theme-700 font-bold underline">See all case studies</Link>
       </div>
     );
+    return <CommunityArticle slug={slug} notFound={notFound} />;
   }
   return c ? <CaseArticle c={c} /> : <CaseList />;
 }

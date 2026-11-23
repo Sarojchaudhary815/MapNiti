@@ -7,8 +7,9 @@ from app.config import ALLOWED_ORIGINS
 from app.models.message import ContactMessage  # noqa: F401 registers table for create_all
 from app.models.learning import LessonProgress  # noqa: F401 registers table for create_all
 from app.models.ai_usage import AiRequest  # noqa: F401 registers table for create_all
+from app.models.article import Article  # noqa: F401 registers table for create_all
 from app.api import (website, hydrology, urban, agriculture, disaster, data_mgmt, auth, projects, admin, raster,
-                     gee, engineering, ai, learn, analysis, downloads)
+                     gee, engineering, ai, learn, analysis, downloads, articles)
 
 Base.metadata.create_all(bind=engine)
 run_migrations()
@@ -24,6 +25,7 @@ app.add_middleware(
 
 _static_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
 os.makedirs(os.path.join(_static_dir, "avatars"), exist_ok=True)
+os.makedirs(os.path.join(_static_dir, "articles"), exist_ok=True)
 app.mount("/static", StaticFiles(directory=_static_dir), name="static")
 
 app.include_router(website.router, prefix="/api/website", tags=["Website"])
@@ -42,6 +44,8 @@ app.include_router(ai.router, prefix="/api/ai", tags=["AI Assistant"])
 app.include_router(learn.router, prefix="/api/learn", tags=["Learning"])
 app.include_router(analysis.router, prefix="/api/analysis", tags=["Analysis Tools"])
 app.include_router(downloads.router, prefix="/api/downloads", tags=["Data Download"])
+app.include_router(articles.router, prefix="/api/articles", tags=["Articles"])
+app.include_router(articles.share_router, prefix="/share", tags=["Share"])
 
 
 @app.get("/")

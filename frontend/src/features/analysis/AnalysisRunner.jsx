@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Loader2, Play, Download, Save, AlertCircle, Info, ChevronDown, Layers } from 'lucide-react';
+import { Loader2, Play, Download, Save, AlertCircle, Info, ChevronDown, Layers, Globe2 } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer, Cell } from 'recharts';
 import AoiPicker from '../../components/common/AoiPicker';
 import MapLegend, { downloadCsv } from '../../components/common/MapLegend';
 import { runAnalysis } from '../../api/hubApi';
 import { saveResult } from '../../api/projectApi';
 import { TOOL_CONFIGS } from './toolConfigs';
+import PublishArticleModal from '../articles/PublishArticleModal';
+
+const MODULE_OF = { urban: 'Urban Planning', disaster: 'Disaster Risk', agri: 'Agriculture', hydro: 'Hydrology' };
 
 const defaultsFor = (cfg) => {
   const out = {};
@@ -167,7 +170,7 @@ export function ResultView({ result, toolId, opacity, setOpacity }) {
   );
 }
 
-export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, onStartDrawing, setMapLayers, setVectorLayers, projectInfo }) {
+export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, onStartDrawing, setMapLayers, setVectorLayers, projectInfo, mapRef }) {
   const cfg = TOOL_CONFIGS[toolId];
   const [values, setValues] = useState(() => defaultsFor(cfg));
   const [loading, setLoading] = useState(false);
@@ -184,6 +187,7 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
   const [opacity, setOpacity] = useState(0.8);
   const [showHow, setShowHow] = useState(false);
   const [saveMsg, setSaveMsg] = useState('');
+  const [publishOpen, setPublishOpen] = useState(false);
 
   useEffect(() => () => { setMapLayers([]); setVectorLayers?.([]); }, [setMapLayers, setVectorLayers]);
 
@@ -293,7 +297,16 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
               <Save size={12} /> {saveMsg || `Save to "${projectInfo.name}"`}
             </button>
           )}
+          <button onClick={() => setPublishOpen(true)}
+            className="w-full flex items-center justify-center gap-1.5 text-[12px] font-black text-white bg-gradient-to-r from-[#0047AB] to-[#1877F2] hover:opacity-90 rounded-xl py-2.5">
+            <Globe2 size={14} /> Publish as article &amp; share
+          </button>
         </>
+      )}
+      {publishOpen && result && (
+        <PublishArticleModal onClose={() => setPublishOpen(false)} result={result} toolId={toolId}
+          toolLabel={cfg?.label} module={MODULE_OF[toolId.split('-')[0]]}
+          selectedAOI={selectedAOI} mapRef={mapRef} />
       )}
     </div>
   );
