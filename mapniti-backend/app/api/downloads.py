@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Body
-from app.services import download_service
+from app.services import download_service, admin_boundaries
 from app.services.analysis_engine import AnalysisError
 
 router = APIRouter()
@@ -32,6 +32,21 @@ def osm(data: dict = Body(...)):
 @router.post("/gee-vector")
 def gee_vector(data: dict = Body(...)):
     return _safe(download_service.gee_vector, data)
+
+
+@router.get("/admin/NPL/index")
+def admin_index():
+    return _safe(lambda _: admin_boundaries.index(), None)
+
+
+@router.get("/admin/NPL/wards/{i}")
+def admin_wards(i: int):
+    return _safe(lambda _: admin_boundaries.wards(i), None)
+
+
+@router.get("/admin/NPL/{level}/{i}")
+def admin_feature(level: str, i: int):
+    return _safe(lambda _: admin_boundaries.feature(level, i), None)
 
 
 @router.get("/boundaries/{country}/{level}")

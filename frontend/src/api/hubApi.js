@@ -62,3 +62,8 @@ export const listArticles = async (limit = 30) => (await API.get('/articles', { 
 export const getArticle = async (slug) => (await API.get(`/articles/${slug}`)).data;
 export const myArticles = async () => (await API.get('/articles/mine')).data;
 export const deleteArticle = async (slug) => (await API.delete(`/articles/${slug}`)).data;
+
+// Nepal admin hierarchy for the AOI picker (Province → District → Palika → Ward)
+export const getAdminIndex = async () => (await API.get('/downloads/admin/NPL/index')).data;
+export const getAdminFeature = async (level, i) => (await API.get(`/downloads/admin/NPL/${level}/${i}`)).data;
+export const getPalikaWards = async (i) => (await API.get(`/downloads/admin/NPL/wards/${i}`, { timeout: 150000 })).data;

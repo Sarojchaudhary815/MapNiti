@@ -1,6 +1,6 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pencil, Upload, CheckCircle2, X, Landmark, Loader2, Search } from 'lucide-react';
-import { getBoundaryGeojson } from '../../api/hubApi';
+import { getAdminIndex, getAdminFeature, getPalikaWards } from '../../api/hubApi';
 
 // Draw-or-upload-or-pick AOI control shared by every analysis / download tool.
 export function parseGeoJsonBoundary(text) {
@@ -28,41 +28,97 @@ export function featureToAoi(feature) {
   return { bbox: { south, north, west, east }, geojson: feature, name: feature.properties?.shapeName };
 }
 
-const LEVELS = [
-  { id: 'ADM1', label: 'Province' },
-  { id: 'ADM2', label: 'District' },
-  { id: 'ADM3', label: 'Palika (local level)' },
-];
-const cache = {};
+const sel = 'w-full text-[11px] border border-slate-200 rounded-lg px-2 py-1.5 bg-white disabled:bg-slate-100 disabled:text-slate-400';
+let indexCache = null;
+const wardCache = {};
 
+/**
+ * Nepal admin picker: Province → District → Palika → Ward, plus a search over
+ * every palika and district. The deepest chosen level becomes the AOI.
+ */
 function BoundaryPicker({ onPick, onClose }) {
-  const [level, setLevel] = useState('ADM2');
-  const [features, setFeatures] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [idx, setIdx] = useState(indexCache);
   const [error, setError] = useState('');
+  const [prov, setProv] = useState('');
+  const [dist, setDist] = useState('');
+  const [pal, setPal] = useState('');
+  const [ward, setWard] = useState('');
+  const [wards, setWards] = useState(null);
+  const [wardState, setWardState] = useState('');
+  const [busy, setBusy] = useState(false);
   const [q, setQ] = useState('');
 
-  const load = async (lvl) => {
-    setLevel(lvl);
-    setFeatures(null);
-    setError('');
-    if (cache[lvl]) { setFeatures(cache[lvl]); return; }
-    setLoading(true);
+  useEffect(() => {
+    if (indexCache) return;
+    getAdminIndex()
+      .then((d) => { if (d.status === 'error') throw new Error(d.message); indexCache = d; setIdx(d); })
+      .catch((err) => setError(err.message || 'Could not load Nepal boundaries.'));
+  }, []);
+
+  const districts = useMemo(() => (idx?.districts || [])
+    .filter((d) => prov === '' || d.province === idx.provinces[prov].name)
+    .sort((a, b) => a.name.localeCompare(b.name)), [idx, prov]);
+  const palikas = useMemo(() => (dist === '' || !idx ? [] : idx.palikas
+    .filter((p) => p.district === idx.districts[dist].name && p.province === idx.districts[dist].province))
+    .sort((a, b) => String(a.name).localeCompare(String(b.name))), [idx, dist]);
+  const hits = useMemo(() => {
+    const t = q.trim().toLowerCase();
+    if (!idx || t.length < 2) return [];
+    const d = idx.districts.filter((x) => x.name.toLowerCase().includes(t))
+      .map((x) => ({ level: 'district', ...x, sub: `District · ${x.province}` }));
+    const p = idx.palikas.filter((x) => String(x.name).toLowerCase().includes(t))
+      .map((x) => ({ level: 'palika', ...x, sub: `${x.type} · ${x.district}, ${x.province}` }));
+    return [...d, ...p].slice(0, 40);
+  }, [idx, q]);
+
+  const choosePalika = (i) => { setPal(i); setWard(''); setWards(null); setWardState(''); };
+  const provOf = (name) => String(idx.provinces.findIndex((x) => x.name === name));
+  const jumpTo = (h) => {
+    setQ('');
+    setProv(provOf(h.province));
+    if (h.level === 'district') { setDist(String(h.i)); choosePalika(''); return; }
+    setDist(String(idx.districts.findIndex((x) => x.name === h.district && x.province === h.province)));
+    choosePalika(String(h.i));
+  };
+  const loadWards = async () => {
+    if (wardCache[pal]) { setWards(wardCache[pal]); return; }
+    setWardState('loading');
     try {
-      // Served through our API (geoBoundaries' GitHub links block browser CORS).
-      const gj = await getBoundaryGeojson(lvl);
-      if (gj.status === 'error') throw new Error(gj.message);
-      const feats = gj.features.filter((f) => f.geometry).sort((a, b) => String(a.properties.shapeName).localeCompare(String(b.properties.shapeName)));
-      cache[lvl] = feats;
-      setFeatures(feats);
+      const d = await getPalikaWards(pal);
+      if (d.status === 'error') throw new Error(d.message);
+      wardCache[pal] = d;
+      setWards(d);
+      setWardState('');
     } catch (err) {
-      setError(err.message || 'Could not load boundaries.');
-    } finally {
-      setLoading(false);
+      setWardState(/time|abort/i.test(`${err.message} ${err.code}`)
+        ? 'OpenStreetMap did not answer. Try again in a minute.' : (err.message || 'Could not load wards.'));
     }
   };
 
-  const list = useMemo(() => (features || []).filter((f) => String(f.properties.shapeName).toLowerCase().includes(q.toLowerCase())).slice(0, 80), [features, q]);
+  const use = async () => {
+    setBusy(true);
+    setError('');
+    try {
+      if (ward !== '' && wards) { onPick(featureToAoi(wards.features[ward])); return; }
+      const [level, i] = pal !== '' ? ['palika', pal] : dist !== '' ? ['district', dist] : ['province', prov];
+      const f = await getAdminFeature(level, i);
+      if (f.status === 'error') throw new Error(f.message);
+      const aoi = featureToAoi(f);
+      const pr = f.properties;
+      aoi.name = level === 'palika' ? `${pr.shapeName}, ${pr.district}` : level === 'district' ? `${pr.shapeName} district` : `${pr.shapeName} Province`;
+      onPick(aoi);
+    } catch (err) {
+      setError(err.message || 'Could not load that boundary.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const palInfo = pal !== '' && idx ? idx.palikas[pal] : null;
+  const useLabel = ward !== '' && wards ? wards.features[ward].properties.shapeName
+    : palInfo ? palInfo.name
+      : dist !== '' ? `${idx.districts[dist].name} district`
+        : prov !== '' ? `${idx.provinces[prov].name} Province` : 'this area';
 
   return (
     <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
@@ -70,31 +126,60 @@ function BoundaryPicker({ onPick, onClose }) {
         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Nepal boundaries</p>
         <button onClick={onClose} className="text-slate-400 hover:text-slate-700"><X size={13} /></button>
       </div>
-      <div className="grid grid-cols-3 gap-1">
-        {LEVELS.map((l) => (
-          <button key={l.id} onClick={() => load(l.id)}
-            className={`text-[10px] font-bold py-1.5 rounded-lg ${level === l.id && (features || loading) ? 'bg-[#0047AB] text-white' : 'bg-white border border-slate-200 text-slate-600'}`}>{l.label}</button>
-        ))}
-      </div>
-      {loading && <p className="text-[10px] text-slate-500 flex items-center gap-1"><Loader2 size={11} className="animate-spin" /> Loading boundaries (first time can take ~30 s)…</p>}
+      {!idx && !error && <p className="text-[10px] text-slate-500 flex items-center gap-1"><Loader2 size={11} className="animate-spin" /> Loading 753 palikas…</p>}
       {error && <p className="text-[10px] text-red-500">{error}</p>}
-      {features && (
+      {idx && (
         <>
           <div className="relative">
             <Search size={12} className="absolute left-2 top-2 text-slate-400" />
-            <input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${features.length} names…`}
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search a palika or district…"
               className="w-full pl-7 pr-2 py-1.5 text-[11px] border border-slate-200 rounded-lg" />
           </div>
-          <div className="max-h-44 overflow-y-auto space-y-0.5">
-            {list.map((f, i) => (
-              <button key={`${f.properties.shapeName}-${i}`} onClick={() => onPick(featureToAoi(f))}
-                className="w-full text-left text-[11px] px-2 py-1 rounded hover:bg-white text-slate-700">{f.properties.shapeName}</button>
-            ))}
-          </div>
-          <p className="text-[9px] text-slate-400">Source: geoBoundaries / Open Data Nepal (CC BY 4.0), simplified for speed.</p>
+          {hits.length > 0 && (
+            <div className="max-h-44 overflow-y-auto space-y-0.5 bg-white rounded-lg border border-slate-200 p-1">
+              {hits.map((h) => (
+                <button key={`${h.level}-${h.i}`} onClick={() => jumpTo(h)} className="w-full text-left px-2 py-1 rounded hover:bg-slate-50">
+                  <span className="block text-[11px] font-semibold text-slate-700">{h.name}</span>
+                  <span className="block text-[9px] text-slate-400">{h.sub}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          <select aria-label="Province" className={sel} value={prov} onChange={(e) => { setProv(e.target.value); setDist(''); choosePalika(''); }}>
+            <option value="">Province…</option>
+            {idx.provinces.map((p) => <option key={p.i} value={p.i}>{p.name}</option>)}
+          </select>
+          <select aria-label="District" className={sel} value={dist}
+            onChange={(e) => { const v = e.target.value; setDist(v); choosePalika(''); if (v !== '') setProv(provOf(idx.districts[v].province)); }}>
+            <option value="">District…</option>
+            {districts.map((d) => <option key={d.i} value={d.i}>{d.name}</option>)}
+          </select>
+          <select aria-label="Palika" className={sel} value={pal} disabled={dist === ''} onChange={(e) => choosePalika(e.target.value)}>
+            <option value="">Palika (local level)…</option>
+            {palikas.map((p) => <option key={p.i} value={p.i}>{p.name} · {p.type}</option>)}
+          </select>
+          {palInfo && (wards ? (
+            <select aria-label="Ward" className={sel} value={ward} onChange={(e) => setWard(e.target.value)}>
+              <option value="">Whole palika ({wards.features.length}{palInfo.wards ? ` of ${palInfo.wards}` : ''} wards mapped)</option>
+              {wards.features.map((f, i) => <option key={f.properties.osm_id || i} value={i}>{f.properties.shapeName}</option>)}
+            </select>
+          ) : palInfo.wards ? (
+            <button onClick={loadWards} disabled={wardState === 'loading'}
+              className="w-full text-[11px] font-semibold py-1.5 rounded-lg border border-dashed border-slate-300 text-slate-600 hover:bg-white flex items-center justify-center gap-1.5 disabled:opacity-60">
+              {wardState === 'loading'
+                ? <><Loader2 size={11} className="animate-spin" /> Loading wards from OpenStreetMap (up to a minute)…</>
+                : `Pick one of ${palInfo.wards} wards`}
+            </button>
+          ) : null)}
+          {wardState && wardState !== 'loading' && <p className="text-[10px] text-amber-600">{wardState}</p>}
+          {wards && wards.features.length === 0 && <p className="text-[10px] text-amber-600">OpenStreetMap has no ward boundaries here yet. Use the whole palika or draw the ward.</p>}
+          <button onClick={use} disabled={busy || prov === ''}
+            className="w-full py-2 rounded-lg text-[11px] font-black text-white bg-[#0047AB] hover:bg-blue-800 disabled:opacity-40 flex items-center justify-center gap-1.5">
+            {busy && <Loader2 size={12} className="animate-spin" />} Use {useLabel}
+          </button>
+          <p className="text-[9px] text-slate-400">Boundaries: Survey Department of Nepal (via younginnovations, MIT). Wards: OpenStreetMap (ODbL).</p>
         </>
       )}
-      {!features && !loading && <p className="text-[10px] text-slate-400">Choose a level to list names.</p>}
     </div>
   );
 }
