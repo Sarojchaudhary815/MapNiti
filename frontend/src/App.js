@@ -13,6 +13,7 @@ import Services from './pages/Services';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import LearnPage from './pages/public/LearnPage';
+import CertificatePage from './pages/public/CertificatePage';
 import BookPage from './pages/public/BookPage';
 import CodeLabPage from './pages/public/CodeLabPage';
 import GisGuidePage from './pages/public/GisGuidePage';
@@ -57,6 +58,7 @@ export default function App() {
           {/* Free public knowledge base — no login needed */}
           <Route path="/learn" element={<LearnPage />} />
           <Route path="/learn/:courseId" element={<LearnPage />} />
+          <Route path="/certificate/:code" element={<CertificatePage />} />
           <Route path="/learn-programming" element={<BookPage />} />
           <Route path="/learn-programming/:chapterId" element={<BookPage />} />
           <Route path="/code-lab" element={<CodeLabPage />} />

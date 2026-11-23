@@ -207,3 +207,37 @@ def share_page(slug: str, db: Session = Depends(get_db)):
 <script>location.replace({json.dumps(target)});</script>
 </body></html>"""
     return HTMLResponse(page)
+
+
+@share_router.get("/certificates/{code}", response_class=HTMLResponse)
+def share_certificate(code: str, db: Session = Depends(get_db)):
+    """Facebook/WhatsApp preview for a Learn certificate, then forward to the public verify page."""
+    from app.models.learning import Certificate
+    c = db.query(Certificate).filter(Certificate.code == code.strip().upper()[:16]).first()
+    target = f"{FRONTEND_URL}/certificate/{c.code}" if c else f"{FRONTEND_URL}/learn"
+    if not c:
+        return HTMLResponse(f'<!doctype html><meta http-equiv="refresh" content="0;url={html.escape(target)}">', status_code=404)
+    u = db.query(User).filter(User.id == c.user_id).first()
+    e = html.escape
+    title = f"{u.full_name if u else 'A learner'} completed {c.course_title}"
+    desc = f"Certificate of completion from MapNiti Learn — final quiz score {c.score}%. Verify code {c.code}."
+    image = f"{FRONTEND_URL}/assets/MapNiti_logo_transparent.png"
+    page = f"""<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<title>{e(title)} | MapNiti</title>
+<meta name="description" content="{e(desc)}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="MapNiti">
+<meta property="og:title" content="{e(title)}">
+<meta property="og:description" content="{e(desc)}">
+<meta property="og:image" content="{e(image)}">
+<meta property="og:url" content="{e(f'{PUBLIC_API_URL}/share/certificates/{c.code}')}">
+<meta name="twitter:card" content="summary">
+<link rel="canonical" href="{e(target)}">
+<meta http-equiv="refresh" content="0;url={e(target)}">
+</head><body>
+<p>Opening <a href="{e(target)}">the certificate</a> on MapNiti…</p>
+<script>location.replace({json.dumps(target)});</script>
+</body></html>"""
+    return HTMLResponse(page)

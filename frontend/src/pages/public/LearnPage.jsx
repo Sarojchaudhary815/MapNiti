@@ -11,6 +11,7 @@ import { ALL_COURSES, TRACKS, LEVELS, courseById } from '../../features/learn/ca
 import { BOOK, CHAPTERS, BOOK_TITLE, BOOK_SUBTITLE } from '../../features/book/bookIndex';
 import { getLearnProgress, setLessonProgress } from '../../api/hubApi';
 import { isAuthenticated } from '../../api/authApi';
+import CourseQuiz from '../../features/learn/CourseQuiz';
 
 // "## " headings of a lesson (outside code blocks) → the lesson outline.
 function lessonOutline(body) {
@@ -408,7 +409,7 @@ wards.plot(column="per_house", legend=True)`}
 }
 
 // ---- Course reader ---------------------------------------------------------------
-function CourseReader({ course, isDone, toggle }) {
+function CourseReader({ course, isDone, toggle, loggedIn }) {
   const navigate = useNavigate();
   const [idx, setIdx] = useState(() => {
     const want = new URLSearchParams(window.location.search).get('lesson');
@@ -564,6 +565,8 @@ function CourseReader({ course, isDone, toggle }) {
               <button onClick={() => toggle(course.id, lesson.id, true)} className="rounded-2xl bg-emerald-600 text-white p-5 font-semibold">Mark course complete</button>
             )}
           </div>
+
+          {!next && <CourseQuiz course={course} isDone={isDone} loggedIn={loggedIn} />}
         </article>
       </div>
     </>
@@ -578,7 +581,7 @@ export default function LearnPage() {
   return (
     <div className="bg-[#f6f7f9] min-h-screen">
       {course
-        ? <CourseReader key={course.id} course={course} isDone={isDone} toggle={toggle} />
+        ? <CourseReader key={course.id} course={course} isDone={isDone} toggle={toggle} loggedIn={loggedIn} />
         : <Catalog isDone={isDone} loggedIn={loggedIn} />}
     </div>
   );

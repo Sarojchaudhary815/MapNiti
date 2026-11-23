@@ -87,3 +87,9 @@ export const syncFieldRecords = async (id, records) =>
 export const deleteFieldRecord = async (id) => (await API.delete(`/field/records/${id}`)).data;
 export const exportSurvey = async (id, fmt) =>
   (await API.get(`/field/surveys/${id}/export.${fmt}`, { responseType: 'blob' })).data;
+
+// Learn: final quizzes and certificates
+export const getCourseQuiz = async (courseId) => (await API.get(`/learn/quiz/${courseId}`)).data;
+export const submitCourseQuiz = async (courseId, answers) => (await API.post(`/learn/quiz/${courseId}`, { answers })).data;
+export const myCertificates = async () => (await API.get('/learn/certificates')).data.certificates;
+export const verifyCertificate = async (code) => (await API.get(`/learn/certificates/verify/${encodeURIComponent(code)}`)).data;

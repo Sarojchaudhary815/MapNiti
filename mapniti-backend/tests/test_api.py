@@ -102,3 +102,42 @@ def test_article_publish_share_and_delete(client, auth, other_auth):
     assert client.delete(f"/api/articles/{slug}", headers=other_auth).status_code in (403, 404)
     assert client.delete(f"/api/articles/{slug}", headers=auth).status_code == 200
     assert client.get(f"/api/articles/{slug}").status_code == 404
+
+
+# ---------- learn: quizzes and certificates ----------
+
+def test_quiz_hides_answers_and_issues_certificate(client, auth):
+    from app.services.quiz_bank import QUIZZES
+    bank = QUIZZES["cartography"]
+    quiz = client.get("/api/learn/quiz/cartography", headers=auth).json()
+    assert len(quiz["questions"]) == len(bank["questions"])
+    assert all(set(q) == {"i", "question", "options"} for q in quiz["questions"])
+
+    right = [opts[ans] for _, opts, ans, _ in bank["questions"]]
+    # passing without finishing the lessons gives no certificate
+    res = client.post("/api/learn/quiz/cartography", json={"answers": right}, headers=auth).json()
+    assert res["passed"] and res["certificate"] is None
+
+    for i in range(bank["lessons"]):
+        client.post("/api/learn/progress", json={"course_id": "cartography", "lesson_id": f"l{i}"}, headers=auth)
+    wrong = ["nope"] * len(right)
+    res = client.post("/api/learn/quiz/cartography", json={"answers": wrong}, headers=auth).json()
+    assert not res["passed"] and res["score"] == 0 and res["certificate"] is None
+
+    res = client.post("/api/learn/quiz/cartography", json={"answers": right}, headers=auth).json()
+    cert = res["certificate"]
+    assert res["score"] == 100 and cert and cert["course_title"] == "Cartography & Map Design"
+
+    v = client.get(f"/api/learn/certificates/verify/{cert['code'].lower()}")   # public, case-insensitive
+    assert v.status_code == 200 and v.json()["name"] == "Test User"
+    assert client.get("/api/learn/certificates/verify/NOTREAL").status_code == 404
+    assert len(client.get("/api/learn/certificates", headers=auth).json()["certificates"]) == 1
+
+
+def test_quiz_bank_is_well_formed():
+    from app.services.quiz_bank import QUIZZES, TITLES
+    assert set(QUIZZES) == set(TITLES)
+    for cid, q in QUIZZES.items():
+        assert q["lessons"] > 0 and len(q["questions"]) >= 5, cid
+        for text, opts, ans, why in q["questions"]:
+            assert 0 <= ans < len(opts) and len(set(opts)) == len(opts) and why, (cid, text)
