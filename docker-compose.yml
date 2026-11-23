@@ -30,7 +30,8 @@ services:
       TRUST_PROXY_HEADERS: "true"   # nginx in front sets X-Forwarded-For
     volumes:
       - ./mapniti-backend/secrets:/app/secrets:ro
-      - avatars:/app/static/avatars
+      # uploads + caches: avatars, CVs, article images, field photos, boundaries
+      - uploads:/app/static
     depends_on:
       mysql:
         condition: service_healthy
@@ -45,4 +46,4 @@ services:
 
 volumes:
   mysql_data:
-  avatars:
+  uploads:

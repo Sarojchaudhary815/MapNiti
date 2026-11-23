@@ -1,6 +1,11 @@
 venv/
 __pycache__/
 *.pyc
-mapniti.db
+*.db
 .env
-static/avatars/*
+.env.*
+!.env.example
+secrets/
+static/*
+*.whl
+.pytest_cache/

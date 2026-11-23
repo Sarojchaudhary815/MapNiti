@@ -107,3 +107,35 @@ The AOI picker's "Nepal" button serves province / district / palika boundaries (
 - [ ] Nightly DB backup: `mysqldump --single-transaction mapniti | gzip > mapniti-$(date +%F).sql.gz`
 - [ ] HTTPS enabled
 - [ ] `.env` and `secrets/` are never committed
+
+---
+
+## Share links and Facebook previews
+
+Published case studies are shared as `PUBLIC_API_URL/share/articles/<slug>`. That page carries the
+Open Graph tags Facebook reads (title, summary, map image) and then forwards the visitor to the article.
+Facebook can only read it from a public address, so set both in `mapniti-backend/.env`:
+
+```
+FRONTEND_URL=https://your-domain.com
+PUBLIC_API_URL=https://your-domain.com     # same domain with the Docker setup (nginx proxies /api, /static, /share)
+```
+
+Check a link with Facebook's [Sharing Debugger](https://developers.facebook.com/tools/debug/) after deploying.
+
+## Uploads and backups
+
+User uploads and caches live in `mapniti-backend/static/` (the `uploads` volume with Docker):
+avatars, CVs, article images, field-survey photos and the cached Nepal boundaries.
+Back it up together with the MySQL database.
+
+## Tests and CI
+
+```bash
+cd mapniti-backend && pip install -r requirements-dev.txt && python -m pytest -q tests
+cd frontend && npx react-scripts test --watchAll=false
+```
+
+Backend tests run on a temporary SQLite database, so they never touch real data.
+`.github/workflows/ci.yml` runs both suites, ESLint, the production build and the Docker
+image builds on every push and pull request once the repository is on GitHub.

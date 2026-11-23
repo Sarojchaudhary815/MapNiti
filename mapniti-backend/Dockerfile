@@ -10,7 +10,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-RUN mkdir -p /app/static/avatars
+RUN mkdir -p /app/static/avatars /app/static/articles /app/static/field /app/static/resumes /app/static/boundaries
 
 EXPOSE 8000
 # 4 workers is a good default for a 2-vCPU server; tune with WEB_CONCURRENCY.

@@ -76,7 +76,7 @@ def _own_survey(db, survey_id: int, user: User) -> FieldSurvey:
 def _clean_fields(fields):
     out, seen = [], set()
     for f in fields or []:
-        key = re.sub(r"[^a-z0-9_]", "_", f.key.lower()).strip("_")[:40] or f"field_{len(out) + 1}"
+        key = re.sub(r"[^a-z0-9]+", "_", f.key.lower()).strip("_")[:40] or f"field_{len(out) + 1}"
         if key in seen or f.type not in FIELD_TYPES:
             continue
         seen.add(key)

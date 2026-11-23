@@ -17,7 +17,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.database import Base  # noqa: E402
 # Import every model so Base.metadata knows all tables.
-from app.models import user, project, collaborator, digitize, message, job, learning  # noqa: E402,F401
+from app.models import (user, project, collaborator, digitize, message, job, learning,  # noqa: E402,F401
+                        ai_usage, article, analysis_run, field)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
