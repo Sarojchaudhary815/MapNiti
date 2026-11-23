@@ -250,18 +250,32 @@ def urban_lulc(data):
     classes = [(k, v[0], v[1]) for k, v in DW_CLASSES.items()]
     layer, legend = _class_layer(dw, classes, roi, scale, "urban-lulc", f"Land cover {year}")
     rows = _rows_from_groups(_class_areas_expr(dw, roi, scale).getInfo(), classes)
+    # Dynamic World has no class where every scene of the year was cloud, snow
+    # or terrain shadow (common in the mountains). Report that gap as "No data"
+    # and express every share as a percentage of the whole AOI.
+    classified = sum(r["area_km2"] for r in rows)
+    no_data = max(0.0, area - classified)
+    for r in rows:
+        r["percent"] = round(100 * r["area_km2"] / area, 1) if area else 0
+    notes = ["Dynamic World: most frequent Sentinel-2 class in the year. Compare years to see change."]
+    if area and no_data / area > 0.005:
+        rows.append({"code": 0, "label": "No data", "color": "#d1d5db",
+                     "area_km2": round(no_data, 3), "percent": round(100 * no_data / area, 1)})
+        notes.append(f"{round(100 * no_data / area)}% of the AOI has no Dynamic World class for {year} "
+                     "(every scene was cloud, snow or shadow; common in high mountains). "
+                     "For full coverage use ESA WorldCover in the GEE Data Hub.")
     built = next(r for r in rows if r["label"] == "Built")
     return _ok(
         title=f"Land Use / Land Cover {year} (Dynamic World 10 m)",
         layers=[layer], legend=legend,
         stats=[{"label": "AOI area", "value": round(area, 2), "unit": "km²"},
                {"label": "Built-up", "value": built["area_km2"], "unit": f"km² ({built['percent']}%)"},
-               {"label": "Dominant class", "value": max(rows, key=lambda r: r["area_km2"])["label"], "unit": ""}],
+               {"label": "Dominant class", "value": max((r for r in rows if r["code"]), key=lambda r: r["area_km2"])["label"], "unit": ""}],
         table={"title": "Area by class", "columns": ["Class", "Area (km²)", "Share (%)"],
                "rows": [[r["label"], r["area_km2"], r["percent"]] for r in rows if r["area_km2"] > 0]},
         chart={"title": "Area by class (km²)", "type": "bar", "xKey": "label", "yKey": "area_km2", "unit": "km²",
                "data": [r for r in rows if r["area_km2"] > 0]},
-        notes=["Dynamic World: most frequent Sentinel-2 class in the year. Compare years to see change."],
+        notes=notes,
     )
 
 

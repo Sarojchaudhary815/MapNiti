@@ -8,6 +8,7 @@ import {
 import Markdown from '../../components/common/Markdown';
 import ContourLines from '../../components/ContourLines';
 import { ALL_COURSES, TRACKS, LEVELS, courseById } from '../../features/learn/catalog';
+import { BOOK, CHAPTERS, BOOK_TITLE, BOOK_SUBTITLE } from '../../features/book/bookIndex';
 import { getLearnProgress, setLessonProgress } from '../../api/hubApi';
 import { isAuthenticated } from '../../api/authApi';
 
@@ -315,6 +316,36 @@ function Catalog({ isDone, loggedIn }) {
 
       <div className="max-w-7xl mx-auto px-6 py-14 space-y-16">
         {!q && <Roadmap isDone={isDone} />}
+
+        {!q && (
+          <Link to="/learn-programming"
+            className="group relative block overflow-hidden rounded-3xl bg-[#0d1117] text-white p-7 md:p-9 hover:shadow-2xl transition">
+            <div className="absolute inset-y-0 right-0 hidden md:block w-[42%] opacity-90 pointer-events-none">
+              <pre className="h-full m-0 p-6 text-[12px] leading-relaxed font-mono text-[#c9d1d9] bg-[#161b22] border-l border-white/10 overflow-hidden">
+{`import geopandas as gpd
+
+wards = gpd.read_file("data/demo_wards.geojson")
+wards["per_house"] = wards.population / wards.households
+wards.plot(column="per_house", legend=True)`}
+                <span className="block mt-4 text-[#3fb950]">▶ Run · Shift + Enter</span>
+              </pre>
+            </div>
+            <div className="relative md:max-w-[55%]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#3fb950] flex items-center gap-2">
+                <Terminal size={14} /> New · interactive book
+              </p>
+              <h3 className="font-display text-2xl md:text-3xl font-bold mt-2">{BOOK_TITLE}</h3>
+              <p className="text-[#8b949e] mt-1">{BOOK_SUBTITLE}</p>
+              <p className="text-[14px] text-[#c9d1d9] mt-4 leading-relaxed">
+                {CHAPTERS.length} chapters in {BOOK.length} parts, from your first variable to DEM cut-and-fill.
+                Every code cell is explained line by line and runs right in your browser, no install needed.
+              </p>
+              <span className="mt-6 inline-flex items-center gap-2 rounded-xl bg-[#238636] group-hover:bg-[#2ea043] px-4 py-2.5 text-sm font-semibold transition">
+                <BookOpen size={16} /> Open the book <ArrowRight size={15} className="group-hover:translate-x-0.5 transition" />
+              </span>
+            </div>
+          </Link>
+        )}
 
         <section>
           <SectionHead eyebrow="All courses" title={q ? `Results for “${query.trim()}”` : 'Browse by track'}

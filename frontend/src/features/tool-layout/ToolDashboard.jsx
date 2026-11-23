@@ -68,6 +68,11 @@ export default function ToolDashboard({ onRasterGenerated, rasterData, activeToo
     }
   };
 
+  // Phones: the panel was hidden to draw; bring it back once the AOI is finished.
+  useEffect(() => {
+    if (selectedAOI && window.innerWidth < 768) setIsPanelOpen(true);
+  }, [selectedAOI]);
+
   // Load the project list whenever the picker opens.
   useEffect(() => {
     if (pickerOpen) {
@@ -93,6 +98,8 @@ export default function ToolDashboard({ onRasterGenerated, rasterData, activeToo
   };
 
   const triggerMapDraw = () => {
+    // On phones the panel covers the map, so get it out of the way to draw.
+    if (window.innerWidth < 768) setIsPanelOpen(false);
     if (mapRef.current && mapRef.current.startDrawing) {
       mapRef.current.startDrawing();
     }
@@ -196,7 +203,7 @@ export default function ToolDashboard({ onRasterGenerated, rasterData, activeToo
   return (
     <div className="flex h-screen w-full overflow-hidden bg-white relative font-sans">
       
-      <div className="group w-20 hover:w-72 h-full z-30 shadow-2xl shrink-0 transition-all duration-300 ease-in-out overflow-hidden">
+      <div className="group w-16 md:w-20 hover:w-72 h-full z-30 shadow-2xl shrink-0 transition-all duration-300 ease-in-out overflow-hidden">
         <ToolSidebar
             activeModule={activeModule}
             setActiveModule={handleModuleChange}
@@ -206,7 +213,7 @@ export default function ToolDashboard({ onRasterGenerated, rasterData, activeToo
       {pickerOpen && (
         <div className="fixed inset-0 z-[2000] flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-6"
           onClick={() => setPickerOpen(false)}>
-          <div className="relative w-full max-w-lg h-[600px] bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden"
+          <div className="relative w-full max-w-lg h-[600px] max-h-[90vh] bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden"
             onClick={(e) => e.stopPropagation()}>
             <button onClick={() => setPickerOpen(false)} title="Close"
               className="absolute top-3 right-3 z-10 p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 hover:text-slate-600">
@@ -225,10 +232,14 @@ export default function ToolDashboard({ onRasterGenerated, rasterData, activeToo
       )}
 
         <>
+          {/* On phones the panel overlays the map (there's no room for both side by side);
+              from md up it sits beside the map as a 400px column. */}
           <div className={`h-full border-r border-slate-200 bg-white z-20 transition-all duration-500 ease-in-out
-            ${(!isFullPage && isPanelOpen) ? 'w-[400px]' : 'w-0 overflow-hidden opacity-0 invisible'}`}>
+            ${(!isFullPage && isPanelOpen)
+              ? 'absolute inset-y-0 left-16 right-0 md:static md:w-[400px] shadow-2xl md:shadow-none'
+              : 'w-0 overflow-hidden opacity-0 invisible'}`}>
 
-            <div className="flex items-center justify-between p-4 border-b bg-slate-50/50 min-w-[400px]">
+            <div className="flex items-center justify-between p-4 border-b bg-slate-50/50 md:min-w-[400px]">
               <div className="flex items-center gap-2">
                 <Layout size={14} className="text-blue-600" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-slate-700 italic">
@@ -272,7 +283,7 @@ export default function ToolDashboard({ onRasterGenerated, rasterData, activeToo
               </div>
             </div>
 
-            <div className="overflow-y-auto h-[calc(100%-57px)] custom-scrollbar bg-white min-w-[400px]">
+            <div className="overflow-y-auto h-[calc(100%-57px)] custom-scrollbar bg-white md:min-w-[400px]">
               {renderModule()}
             </div>
           </div>

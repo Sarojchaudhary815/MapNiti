@@ -2,8 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Map as MapIcon, Droplets, Building2, Zap, Sprout, ArrowLeft } from "lucide-react";
-const LogoImg = "/assets/MapNiti_logo_transparent.png";
 import ContourLines from "../components/ContourLines";
+
+const LogoImg = "/assets/MapNiti_logo_transparent.png";
 
 const highlights = [
   { icon: Droplets, text: "Flood hazard mapping & watershed delineation" },

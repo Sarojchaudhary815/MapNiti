@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Play, Loader2, RotateCcw, Copy, Check, Terminal, Lightbulb, MousePointerClick } from 'lucide-react';
+import { Play, Loader2, RotateCcw, Copy, Check, Terminal, Lightbulb, MousePointerClick, BookOpen } from 'lucide-react';
 import CodeEditor from '../../components/common/CodeEditor';
 import { EXAMPLES, LEVEL_STYLE, groupByTopic, fixBlockedTiles } from './labExamples';
 import { loadScript, runPython } from './pyRunner';
@@ -263,6 +263,14 @@ export default function CodeLab({ seed }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-5 h-full">
       <aside className="space-y-4 lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:sticky lg:top-4 pr-1">
+        <a href="/learn-programming"
+          className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-[#0d1117] text-white hover:bg-[#161b22] transition-colors">
+          <BookOpen size={18} className="text-[#3fb950] shrink-0" />
+          <span className="min-w-0">
+            <span className="block text-[12.5px] font-bold">Learn Programming</span>
+            <span className="block text-[10px] text-slate-400 leading-tight">Step-by-step Python book, every cell explained</span>
+          </span>
+        </a>
         <div className="grid grid-cols-2 lg:grid-cols-1 gap-1">
           {LANGS.map((l) => (
             <button key={l.id} onClick={() => pickExample(l.id, 0)}

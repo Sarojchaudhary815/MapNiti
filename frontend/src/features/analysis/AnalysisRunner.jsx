@@ -16,6 +16,8 @@ const defaultsFor = (cfg) => {
   return out;
 };
 
+const fmtElapsed = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+
 function downloadGeoJson(name, data) {
   const url = URL.createObjectURL(new Blob([JSON.stringify(data)], { type: 'application/geo+json' }));
   const a = document.createElement('a');
@@ -169,6 +171,14 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
   const cfg = TOOL_CONFIGS[toolId];
   const [values, setValues] = useState(() => defaultsFor(cfg));
   const [loading, setLoading] = useState(false);
+  const [elapsed, setElapsed] = useState(0);
+  useEffect(() => {
+    if (!loading) return undefined;
+    setElapsed(0);
+    const started = Date.now();
+    const t = setInterval(() => setElapsed(Math.floor((Date.now() - started) / 1000)), 1000);
+    return () => clearInterval(t);
+  }, [loading]);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
   const [opacity, setOpacity] = useState(0.8);
@@ -255,8 +265,24 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
       <button onClick={run} disabled={!selectedAOI || loading}
         className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[12px] font-black text-white bg-[#0047AB] hover:bg-blue-800 disabled:opacity-40">
         {loading ? <Loader2 size={14} className="animate-spin" /> : <Play size={14} />}
-        {loading ? 'Running on Earth Engine…' : selectedAOI ? 'Run analysis' : 'Select an AOI first'}
+        {loading ? `Running on Earth Engine… ${fmtElapsed(elapsed)}` : selectedAOI ? 'Run analysis' : 'Select an AOI first'}
       </button>
+      {loading && (
+        <div className="space-y-1.5">
+          <div className="h-1 rounded-full bg-slate-100 overflow-hidden">
+            {/* Indeterminate bar: Earth Engine gives no progress, so this only shows it's alive. */}
+            <div className="h-full w-1/3 rounded-full bg-[#0047AB]/70 animate-[mnslide_1.4s_ease-in-out_infinite]" />
+          </div>
+          <p className="text-[10.5px] text-slate-400 leading-snug">
+            {elapsed < 30
+              ? 'Usually 5–30 seconds.'
+              : elapsed < 120
+                ? 'Large areas, long date ranges and external catalogues (OSM, USGS) take longer. Still working…'
+                : 'Big jobs can take up to 3–4 minutes. A smaller area runs much faster.'}
+          </p>
+          <style>{'@keyframes mnslide{0%{transform:translateX(-100%)}100%{transform:translateX(300%)}}'}</style>
+        </div>
+      )}
       {error && <p className="text-[11px] text-red-600 flex gap-1.5 bg-red-50 rounded-lg p-2"><AlertCircle size={13} className="shrink-0 mt-0.5" />{error}</p>}
 
       {result && (
