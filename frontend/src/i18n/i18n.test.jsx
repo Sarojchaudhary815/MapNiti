@@ -21,6 +21,13 @@ afterEach(() => {
   host.remove();
 });
 
+test('starts in English even if Nepali was chosen before', () => {
+  localStorage.setItem('mn_lang', 'ne');
+  act(() => root.render(<I18nProvider><Label /></I18nProvider>));
+  expect(host.querySelector('[data-testid=label]').textContent).toBe('Live Nepal / No such phrase');
+  expect(document.documentElement.lang).toBe('en');
+});
+
 test('switches to Nepali, falls back to English, and remembers the choice', () => {
   act(() => root.render(<I18nProvider><LanguageToggle /><Label /></I18nProvider>));
   const label = () => host.querySelector('[data-testid=label]').textContent;

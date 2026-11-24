@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Map as MapIcon, Menu, X, LogOut, ChevronDown, Sparkles, GraduationCap, Code2, Compass, Newspaper, Database, FileText, Terminal } from 'lucide-react';
 import { isAuthenticated, logoutUser } from '../api/authApi';
-import { useT, LanguageToggle } from '../i18n';
+import { useT } from '../i18n';
 
 const LogoImg = '/assets/MapNiti_logo_transparent.png';
 
@@ -90,7 +90,6 @@ const Navbar = () => {
           <Link to="/ai" className="flex items-center gap-1.5 text-[14px] font-bold text-violet-700 bg-violet-50 hover:bg-violet-100 px-4 py-2 rounded-full">
             <Sparkles size={15} /> AI
           </Link>
-          <LanguageToggle compact />
 
           {loggedIn ? (
             <div className="flex items-center gap-3">
@@ -142,7 +141,6 @@ const Navbar = () => {
               {t(link.label)}
             </Link>
           ))}
-          <div className="py-3"><LanguageToggle /></div>
 
           {loggedIn ? (
             <>

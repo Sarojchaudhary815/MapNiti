@@ -320,7 +320,7 @@ const HomeContactSection = () => {
                   <FloatingField variant="soft" label="How can we help?" name="message" as="textarea" rows={4} value={form.message} onChange={handleChange} required />
                   <button
                     disabled={status === "loading"}
-                    className="w-full flex items-center justify-center gap-2 bg-theme-700 text-white text-sm font-black py-3 rounded-xl hover:bg-[#F2994A] shadow-md transition-all uppercase tracking-widest disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 bg-theme-700 text-white text-sm font-black py-3 rounded-xl hover:bg-theme-600 hover:shadow-lg shadow-md transition-all uppercase tracking-widest disabled:opacity-50"
                   >
                     {status === "loading" && <Loader2 size={18} className="animate-spin" />}
                     {status === "loading" ? "Sending..." : "Send Message"}

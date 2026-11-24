@@ -116,11 +116,10 @@ const DICTS = { en: {}, ne: NE };
 const KEY = 'mn_lang';
 const I18nContext = createContext({ lang: 'en', setLang: () => {}, t: (s) => s });
 
+// The site is English-only for now: the language switch is hidden and an
+// earlier saved choice of Nepali is ignored. The Nepali dictionary stays for later.
 const initialLang = () => {
-  try {
-    const saved = localStorage.getItem(KEY);
-    if (saved === 'en' || saved === 'ne') return saved;
-  } catch { /* storage blocked */ }
+  try { localStorage.removeItem(KEY); } catch { /* storage blocked */ }
   return 'en';
 };
 

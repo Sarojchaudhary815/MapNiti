@@ -6,7 +6,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, logoutUser } from '../../api/authApi';
 import ProfileEditModal, { avatarUrl } from './ProfileEditModal';
-import { useT, LanguageToggle } from '../../i18n';
+import { useT } from '../../i18n';
 
 export default function ToolSidebar({ activeModule, setActiveModule }) {
   const navigate = useNavigate();
@@ -82,7 +82,6 @@ export default function ToolSidebar({ activeModule, setActiveModule }) {
             {t('Learn & Guides')} ↗
           </span>
         </a>
-        <div className="mt-3 px-2 hidden group-hover:block"><LanguageToggle dark /></div>
       </div>
 
       {/* --- PROFILE WIDGET --- */}
