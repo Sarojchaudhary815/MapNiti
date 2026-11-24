@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { paid, hashRef } from '../../billing/paywall';
 import { Loader2, Crosshair, Trash2, TrendingUp, Download } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { fetchProfile } from '../../../api/hubApi';
@@ -108,7 +109,7 @@ export default function ElevationProfile({ activeStep, setActiveStep, outletCoor
               Max grade {s.max_grade_pct}% exceeds 12% — steeper than typical limits for rural roads in hilly terrain. Consider hairpin bends or realignment (check DoR / NRRS standards).
             </p>
           )}
-          <button onClick={() => downloadCsv('elevation_profile.csv', data.profile)}
+          <button onClick={() => paid({ kind: 'table', ref: `profile:${hashRef(data.profile)}`, label: 'Elevation profile (CSV)' }, () => downloadCsv('elevation_profile.csv', data.profile))}
             className="w-full text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg py-2 flex items-center justify-center gap-1">
             <Download size={11} /> Download chainage / RL table (CSV)
           </button>

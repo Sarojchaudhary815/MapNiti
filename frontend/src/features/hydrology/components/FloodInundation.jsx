@@ -12,6 +12,7 @@ import {
 import { saveResult, listResults } from '../../../api/projectApi';
 
 import { API_BASE_URL } from '../../../config';
+import { paid, hashRef } from '../../billing/paywall';
 const DEFAULT_FLOOD_COLOR = '#2563eb';
 const ROADS_SOURCE_ID = 'impact-roads-source';
 const ROADS_LAYER_ID = 'impact-roads-line';
@@ -1147,14 +1148,14 @@ export default function FloodInundation({ selectedAOI, setSelectedAOI, onStartDr
                                 <p className="text-[14px] font-black text-sky-900">{uploadedImpact.summary.affected_buildings} <span className="text-[9px] font-bold">/ {uploadedImpact.summary.total_buildings_analyzed} ({uploadedImpact.summary.affected_percentage}%)</span></p>
                               </div>
                               <button
-                                onClick={() => {
+                                onClick={() => paid({ kind: 'vector', ref: `impact:${hashRef(uploadedImpact.summary)}`, label: 'Flood impact on buildings (GeoJSON)' }, () => {
                                   const blob = new Blob([JSON.stringify(uploadedImpact.geojson, null, 2)], { type: 'application/json' });
                                   const url = URL.createObjectURL(blob);
                                   const a = document.createElement('a');
                                   a.href = url; a.download = 'uploaded-buildings-flood-impact.geojson';
                                   document.body.appendChild(a); a.click(); a.remove();
                                   URL.revokeObjectURL(url);
-                                }}
+                                })}
                                 className="flex items-center justify-center gap-1.5 p-2.5 bg-white border border-slate-200 rounded-xl text-[9px] font-black uppercase text-slate-600 hover:border-sky-300"
                               >
                                 <Download size={12} /> Download Results

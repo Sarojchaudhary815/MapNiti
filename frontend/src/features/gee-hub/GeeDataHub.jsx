@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { paid, hashRef } from '../billing/paywall';
 import {
   Search, Loader2, Download, Database, LineChart as LineIcon, Save, AlertCircle,
   ChevronLeft, Layers, Satellite, Mountain, Trees, CloudRain, Droplets, FlaskConical, Users, Flame, Globe2,
@@ -129,7 +130,7 @@ function TimeSeriesPanel({ dataset, geometry, start, end }) {
               ))}
             </div>
           )}
-          <button onClick={() => downloadCsv(`${dataset.id}_timeseries.csv`, data.series)}
+          <button onClick={() => paid({ kind: 'table', ref: `ts:${dataset.id}:${hashRef(data.series)}`, label: `${dataset.id} time series (CSV)` }, () => downloadCsv(`${dataset.id}_timeseries.csv`, data.series))}
             className="w-full text-[10px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg py-1.5 flex items-center justify-center gap-1">
             <Download size={11} /> Download series (CSV)
           </button>

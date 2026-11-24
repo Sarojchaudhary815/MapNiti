@@ -93,3 +93,16 @@ export const getCourseQuiz = async (courseId) => (await API.get(`/learn/quiz/${c
 export const submitCourseQuiz = async (courseId, answers) => (await API.post(`/learn/quiz/${courseId}`, { answers })).data;
 export const myCertificates = async () => (await API.get('/learn/certificates')).data.certificates;
 export const verifyCertificate = async (code) => (await API.get(`/learn/certificates/verify/${encodeURIComponent(code)}`)).data;
+
+// Billing: credits for exports
+export const getBillingPlans = async () => (await API.get('/billing/plans')).data;
+export const getMyBilling = async () => (await API.get('/billing/me')).data;
+export const payExport = async (payload) => (await API.post('/billing/export', payload)).data;
+export const submitPayment = async (payload) => (await API.post('/billing/payments', payload, { timeout: 60000 })).data.payment;
+export const adminPayments = async (status = 'pending') => (await API.get('/billing/admin/payments', { params: { status } })).data;
+export const adminPaymentProof = async (id) => (await API.get(`/billing/admin/payments/${id}/proof`, { responseType: 'blob' })).data;
+export const adminDecidePayment = async (id, action, note) => (await API.post(`/billing/admin/payments/${id}/${action}`, { note })).data.payment;
+export const adminGrantCredits = async (payload) => (await API.post('/billing/admin/grant', payload)).data;
+export const adminBillingSettings = async () => (await API.get('/billing/admin/settings')).data;
+export const adminSaveBillingSettings = async (payload) => (await API.put('/billing/admin/settings', payload, { timeout: 60000 })).data;
+export const adminBillingSummary = async () => (await API.get('/billing/admin/exports')).data;

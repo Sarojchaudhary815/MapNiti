@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 
 import { API_BASE_URL } from '../../../config';
+import { requireExport, hashRef } from '../../billing/paywall';
 
 // Props:
 //   selectedAOI      - { bbox, geojson, areaKm2 } set by drawing or upload
@@ -288,6 +289,7 @@ export default function FloodHazardMapping({
   // ---------- Section C: PDF report ----------
   const handleGenerateReport = async () => {
     if (!selectedAOI || !stats) return;
+    if (!(await requireExport({ kind: 'report', ref: `flood-pdf:${hashRef(stats)}`, label: 'Flood hazard report (PDF)' }))) return;
     setReportLoading(true);
     setReportError(null);
     try {

@@ -23,6 +23,8 @@ import CaseStudiesPage from './pages/public/CaseStudiesPage';
 
 // Features
 import ToolDashboard from './features/tool-layout/ToolDashboard';
+import DownloadPage from './features/billing/DownloadPage';
+import PaywallModal from './features/billing/PaywallModal';
 
 const ProtectedRoute = ({ children }) => {
   const location = useLocation();
@@ -47,6 +49,7 @@ export default function App() {
 
   return (
     <Router>
+      <PaywallModal />
       <Routes>
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
@@ -86,6 +89,9 @@ export default function App() {
             </div>
           </ProtectedRoute>
         } />
+
+        {/* paid download links handed out by the API */}
+        <Route path="/download/:token" element={<ProtectedRoute><DownloadPage /></ProtectedRoute>} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

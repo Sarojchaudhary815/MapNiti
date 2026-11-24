@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { paid, hashRef } from '../../billing/paywall';
 import { Loader2, FileText, AlertTriangle, Info, AlertCircle, Printer, Download, Save } from 'lucide-react';
 import AoiPicker from '../../../components/common/AoiPicker';
 import { downloadCsv } from '../../../components/common/MapLegend';
@@ -199,10 +200,10 @@ export default function SiteReport({ selectedAOI, setSelectedAOI, onStartDrawing
           </Section>
 
           <div className="grid grid-cols-3 gap-2">
-            <button onClick={() => printReport(report)} className="flex items-center justify-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg py-2">
+            <button onClick={() => paid({ kind: 'report', ref: `site-pdf:${hashRef(report)}`, label: 'Site report (PDF)' }, () => printReport(report))} className="flex items-center justify-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg py-2">
               <Printer size={11} /> Print / PDF
             </button>
-            <button onClick={() => downloadCsv('site_report.csv', flatten(report))} className="flex items-center justify-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg py-2">
+            <button onClick={() => paid({ kind: 'table', ref: `site-csv:${hashRef(report)}`, label: 'Site report (CSV)' }, () => downloadCsv('site_report.csv', flatten(report)))} className="flex items-center justify-center gap-1 text-[10px] font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-lg py-2">
               <Download size={11} /> CSV
             </button>
             <button onClick={save} disabled={!projectInfo} className="flex items-center justify-center gap-1 text-[10px] font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 disabled:opacity-40 rounded-lg py-2">

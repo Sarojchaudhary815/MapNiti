@@ -13,6 +13,7 @@ import { TOOL_CONFIGS } from './toolConfigs';
 import PublishArticleModal from '../articles/PublishArticleModal';
 import { buildReportHtml } from './analysisReport';
 import ReportPreview from './ReportPreview';
+import { paid, requireExport } from '../billing/paywall';
 import SwipeCompare from './SwipeCompare';
 import { useT } from '../../i18n';
 import { getCurrentUser } from '../../api/authApi';
@@ -82,6 +83,8 @@ function Param({ p, values, setValues }) {
 export function ResultView({ result, toolId, opacity, setOpacity }) {
   const chart = result.chart;
   const vectorNames = (result.vectors || []).map((v) => v.name).join(', ');
+  // identifies this result, so exporting it again within 24 h is free
+  const refBase = `${toolId}:${result.computed_at || ''}:${result.title || ''}`;
   return (
     <div className="space-y-4">
       <p className="text-[13px] font-black text-slate-800">{result.title}</p>
@@ -144,7 +147,8 @@ export function ResultView({ result, toolId, opacity, setOpacity }) {
         <div>
           <div className="flex items-center justify-between mb-1">
             <p className="text-[10px] font-bold text-slate-500">{result.table.title}</p>
-            <button onClick={() => downloadCsv(`${toolId}.csv`, result.table.rows.map((r) => Object.fromEntries(result.table.columns.map((c, i) => [c, r[i]]))))}
+            <button onClick={() => paid({ kind: 'table', ref: `csv:${refBase}`, label: `${result.table.title || toolId} (CSV)` },
+              () => downloadCsv(`${toolId}.csv`, result.table.rows.map((r) => Object.fromEntries(result.table.columns.map((c, i) => [c, r[i]])))))}
               className="text-[9px] font-bold text-blue-600 flex items-center gap-0.5"><Download size={10} /> CSV</button>
           </div>
           <div className="overflow-x-auto border border-slate-100 rounded-lg">
@@ -163,7 +167,7 @@ export function ResultView({ result, toolId, opacity, setOpacity }) {
           </a>
         ))}
         {(result.vectors || []).map((v) => (
-          <button key={v.id} onClick={() => downloadGeoJson(v.id, v.data)} className="flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg px-3 py-2">
+          <button key={v.id} onClick={() => paid({ kind: 'vector', ref: `geojson:${v.id}:${refBase}`, label: `${v.name} (GeoJSON)` }, () => downloadGeoJson(v.id, v.data))} className="flex items-center gap-1 text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg px-3 py-2">
             <Download size={11} /> {v.name} (GeoJSON)
           </button>
         ))}
@@ -287,6 +291,8 @@ export default function AnalysisRunner({ toolId, selectedAOI, setSelectedAOI, on
   const report = async () => {
     setReporting(true);
     try {
+      const ok = await requireExport({ kind: 'report', ref: `pdf:${toolId}:${result?.computed_at || ''}:${result?.title || ''}`, label: `${cfg?.label || toolId} report (PDF)` });
+      if (!ok) return;
       const image = await mapRef?.current?.snapshot?.({ bbox: selectedAOI?.bbox });
       const params = (cfg?.params || []).map((p) => {
         const v = values[p.key];

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { paid, hashRef } from '../billing/paywall';
 import {
   Download, Loader2, Mountain, Layers, Map as MapIcon, Building2, Landmark, CheckSquare, Square, AlertCircle, ExternalLink, Info,
 } from 'lucide-react';
@@ -150,7 +151,7 @@ function ContoursTab({ aoi, setVectorLayers }) {
     try {
       const res = await req('dxf');
       if (res.status !== 'success') throw new Error(res.message);
-      exportText(res.content, res.filename, 'application/dxf');
+      await paid({ kind: 'cad', ref: `dxf:${hashRef(res.content)}`, label: res.filename }, () => exportText(res.content, res.filename, 'application/dxf'));
       setInfo(res.summary);
     } catch (err) { setError(errMsg(err, 'DXF export failed.')); } finally { setBusy(''); }
   };
@@ -187,9 +188,9 @@ function ContoursTab({ aoi, setVectorLayers }) {
       )}
       {gj && (
         <div className="grid grid-cols-3 gap-1.5">
-          <button onClick={() => exportGeoJSON(gj, `contours_${interval}m.geojson`)} className="text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-lg py-2">GeoJSON</button>
-          <button onClick={() => exportKML(gj, `contours_${interval}m.kml`)} className="text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-lg py-2">KML</button>
-          <button onClick={() => exportShapefile(gj, `contours_${interval}m`)} className="text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-lg py-2">Shapefile</button>
+          <button onClick={() => paid({ kind: 'vector', ref: `contours:${hashRef(gj)}`, label: `Contours ${interval} m` }, () => exportGeoJSON(gj, `contours_${interval}m.geojson`))} className="text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-lg py-2">GeoJSON</button>
+          <button onClick={() => paid({ kind: 'vector', ref: `contours:${hashRef(gj)}`, label: `Contours ${interval} m` }, () => exportKML(gj, `contours_${interval}m.kml`))} className="text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-lg py-2">KML</button>
+          <button onClick={() => paid({ kind: 'vector', ref: `contours:${hashRef(gj)}`, label: `Contours ${interval} m` }, () => exportShapefile(gj, `contours_${interval}m`))} className="text-[10px] font-bold text-emerald-700 bg-emerald-50 rounded-lg py-2">Shapefile</button>
         </div>
       )}
       <p className="text-[9px] text-slate-400 flex gap-1"><Info size={10} className="shrink-0 mt-0.5" />30 m DEMs have ±5–10 m vertical accuracy in hills — fine for planning; use total-station / drone surveys for detailed design.</p>
@@ -229,7 +230,7 @@ function OsmTab({ aoi, setVectorLayers }) {
           <div className="grid grid-cols-4 gap-1.5">
             {[['GeoJSON', () => exportGeoJSON(res.geojson, res.filename)], ['KML', () => exportKML(res.geojson, `osm_${res.layer}.kml`)],
               ['Shapefile', () => exportShapefile(res.geojson, `osm_${res.layer}`)], ['CSV', () => exportCSV(res.geojson, `osm_${res.layer}.csv`)]].map(([l, fn]) => (
-              <button key={l} onClick={fn} className="text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg py-2">{l}</button>
+              <button key={l} onClick={() => paid({ kind: 'vector', ref: `osm:${res.layer}:${hashRef(res.geojson)}`, label: `OSM ${res.name}` }, fn)} className="text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg py-2">{l}</button>
             ))}
           </div>
         </>

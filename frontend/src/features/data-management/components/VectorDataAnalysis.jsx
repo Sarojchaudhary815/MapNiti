@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { paid, hashRef } from '../../billing/paywall';
 import * as turf from '@turf/turf';
 import { Upload, Loader2, Download, Trash2, Info } from 'lucide-react';
 import { exportGeoJSON, exportKML, exportShapefile, exportCSV } from '../../../utils/geoExport';
@@ -234,7 +235,7 @@ export default function VectorDataAnalysis({ selectedAOI, setVectorLayers }) {
           <div className="grid grid-cols-4 gap-1.5">
             {[['GeoJSON', () => exportGeoJSON(target.fc, `${target.name}.geojson`)], ['KML', () => exportKML(target.fc, `${target.name}.kml`)],
               ['Shapefile', () => exportShapefile(target.fc, target.name)], ['CSV', () => exportCSV(target.fc, `${target.name}.csv`)]].map(([l, fn]) => (
-              <button key={l} onClick={fn} className="flex items-center justify-center gap-0.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg py-2"><Download size={10} /> {l}</button>
+              <button key={l} onClick={() => (result ? paid({ kind: 'vector', ref: `vec:${hashRef(target.fc)}`, label: target.name }, fn) : fn())} className="flex items-center justify-center gap-0.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg py-2"><Download size={10} /> {l}</button>
             ))}
           </div>
         </div>
