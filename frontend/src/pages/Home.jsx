@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight, ChevronUp,
   Droplets, Building2, Zap, Sprout, Database,
-  ShieldCheck, HardHat, Mail, Phone, MapPin, Loader2, CheckCircle2, AlertCircle,
+  ShieldCheck, HardHat, FolderPlus, Mail, Phone, MapPin, Loader2, CheckCircle2, AlertCircle,
 } from "lucide-react";
 import { FaLinkedinIn, FaGlobe } from "react-icons/fa";
 import { isAuthenticated } from "../api/authApi";
@@ -434,8 +434,18 @@ export default function Home() {
               <h4 className="font-bold text-slate-800">Built for Engineers</h4>
               <p className="text-slate-500 text-sm">Civil, geomatics and environmental workflows, from site reports to DXF contours.</p>
             </div>
-            <div className="bg-theme-100 rounded-3xl p-8 flex flex-col gap-3 col-span-2">
-              <p className="text-4xl font-display font-black text-theme-700">300+ <span className="text-base font-semibold text-slate-500">projects delivered since 2014</span></p>
+            <div className="bg-theme-100 rounded-3xl p-8 col-span-2 flex flex-col sm:flex-row sm:items-center gap-5 justify-between">
+              <div className="flex gap-4 items-start">
+                <FolderPlus className="text-theme-700 shrink-0" size={28} />
+                <div>
+                  <h4 className="font-bold text-slate-800">Create your own project</h4>
+                  <p className="text-slate-500 text-sm mt-1">Draw your area, run the analysis and save the results — all in your own MapNiti project, free.</p>
+                </div>
+              </div>
+              <Link to={loggedIn ? "/tool" : "/register"}
+                className="inline-flex items-center justify-center gap-2 shrink-0 bg-theme-700 hover:bg-theme-600 text-white text-sm font-bold px-5 py-3 rounded-xl shadow-md transition-all">
+                {loggedIn ? "Open MapNiti Tool" : "Start a project"} <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
         </div>
