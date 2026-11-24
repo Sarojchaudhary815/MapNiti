@@ -4,7 +4,7 @@ import React, { useState } from "react";
 // is focused or filled, then floats up to sit directly on the border line
 // (with a background patch that cuts a gap into the border), matching the
 // common Material-style outlined text field pattern.
-// variant="glass": translucent field for dark / gradient backgrounds; the label
+// variant="glass" / "soft": translucent field for dark / light gradient backgrounds; the label
 // floats to the top inside the box instead of cutting into the border.
 const FloatingField = ({ label, name, as = "input", type = "text", rows = 4, value, onChange, variant = "outline", ...props }) => {
   const [focused, setFocused] = useState(false);
@@ -14,12 +14,14 @@ const FloatingField = ({ label, name, as = "input", type = "text", rows = 4, val
   const fieldClass =
     "w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-800 outline-none transition-all focus:ring-2 focus:ring-theme-700 focus:border-theme-700 focus:bg-white resize-none";
 
-  const glass = variant === "glass";
-  const glassField =
-    "w-full bg-white/10 border border-white/20 rounded-xl px-4 pt-5 pb-2 text-sm text-white outline-none transition-all focus:bg-white/15 focus:border-white/60 focus:ring-2 focus:ring-white/20 resize-none";
+  // "glass" (on dark) and "soft" (on light gradients): the label floats to the top inside the box
+  const glass = variant === "glass" || variant === "soft";
+  const glassField = variant === "soft"
+    ? "w-full bg-white/80 border border-sky-100 rounded-xl px-4 pt-5 pb-2 text-sm text-slate-800 outline-none transition-all focus:bg-white focus:border-theme-500 focus:ring-2 focus:ring-theme-100 resize-none"
+    : "w-full bg-white/10 border border-white/20 rounded-xl px-4 pt-5 pb-2 text-sm text-white outline-none transition-all focus:bg-white/15 focus:border-white/60 focus:ring-2 focus:ring-white/20 resize-none";
   const glassLabel = floated
-    ? "absolute left-4 top-1.5 text-[10px] font-semibold uppercase tracking-wider text-white/70 transition-all pointer-events-none"
-    : "absolute left-4 top-3.5 text-sm text-white/60 transition-all pointer-events-none";
+    ? `absolute left-4 top-1.5 text-[10px] font-semibold uppercase tracking-wider transition-all pointer-events-none ${variant === "soft" ? "text-theme-700" : "text-white/70"}`
+    : `absolute left-4 top-3.5 text-sm transition-all pointer-events-none ${variant === "soft" ? "text-slate-400" : "text-white/60"}`;
 
   const labelClass = glass ? glassLabel : floated
     ? `absolute left-4 -top-2.5 px-1.5 bg-white text-xs font-semibold transition-all pointer-events-none ${

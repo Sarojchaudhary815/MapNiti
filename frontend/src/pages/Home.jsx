@@ -286,41 +286,41 @@ const HomeContactSection = () => {
             </div>
           </div>
 
-          <div className="w-full max-w-lg lg:ml-auto relative bg-gradient-to-br from-[#0080D9] via-[#015298] to-[#061639] text-white rounded-3xl shadow-xl shadow-theme-900/20 p-6 md:p-7 overflow-hidden">
-            <div className="absolute -top-12 -right-12 w-40 h-40 bg-white/15 rounded-full blur-3xl pointer-events-none" />
-            <div className="absolute -bottom-16 -left-10 w-44 h-44 bg-[#F2994A]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="w-full max-w-lg lg:ml-auto relative bg-gradient-to-br from-white via-[#F2F8FF] to-[#E1EFFC] border border-sky-100 rounded-3xl shadow-lg shadow-sky-900/5 p-6 md:p-7 overflow-hidden">
+            <div className="absolute -top-12 -right-12 w-40 h-40 bg-sky-200/40 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-16 -left-10 w-44 h-44 bg-[#F2994A]/10 rounded-full blur-3xl pointer-events-none" />
 
             {status === "success" ? (
               <div className="relative flex flex-col items-center text-center py-10">
                 <CheckCircle2 className="text-green-500 mb-4" size={48} />
-                <h3 className="text-xl font-black text-white mb-2">Message Sent</h3>
-                <p className="text-white/70 text-sm">Thank you for reaching out. We will get back to you soon.</p>
-                <button onClick={() => setStatus("idle")} className="mt-6 text-white font-bold text-sm underline-offset-4 hover:underline">
+                <h3 className="text-xl font-black text-slate-800 mb-2">Message Sent</h3>
+                <p className="text-slate-500 text-sm">Thank you for reaching out. We will get back to you soon.</p>
+                <button onClick={() => setStatus("idle")} className="mt-6 text-theme-700 font-bold text-sm underline-offset-4 hover:underline">
                   Send another message
                 </button>
               </div>
             ) : (
               <div className="relative">
                 <div className="mb-5">
-                  <h4 className="font-black text-white text-sm uppercase tracking-widest">Send a Message</h4>
-                  <p className="text-white/60 text-xs mt-0.5">We usually reply within a day</p>
+                  <h4 className="font-black text-slate-800 text-sm uppercase tracking-widest">Send a Message</h4>
+                  <p className="text-slate-500 text-xs mt-0.5">We usually reply within a day</p>
                 </div>
 
                 <form className="space-y-3" onSubmit={handleSubmit}>
                   {status === "error" && (
-                    <div className="flex items-start gap-2 p-3 bg-red-500/20 border border-red-300/40 text-red-100 text-xs font-semibold rounded-xl">
+                    <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-100 text-red-600 text-xs font-semibold rounded-xl">
                       <AlertCircle size={16} className="shrink-0 mt-0.5" />
                       {errorMsg}
                     </div>
                   )}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <FloatingField variant="glass" label="Full Name" name="name" value={form.name} onChange={handleChange} required />
-                    <FloatingField variant="glass" label="Email Address" name="email" type="email" value={form.email} onChange={handleChange} required />
+                    <FloatingField variant="soft" label="Full Name" name="name" value={form.name} onChange={handleChange} required />
+                    <FloatingField variant="soft" label="Email Address" name="email" type="email" value={form.email} onChange={handleChange} required />
                   </div>
-                  <FloatingField variant="glass" label="How can we help?" name="message" as="textarea" rows={4} value={form.message} onChange={handleChange} required />
+                  <FloatingField variant="soft" label="How can we help?" name="message" as="textarea" rows={4} value={form.message} onChange={handleChange} required />
                   <button
                     disabled={status === "loading"}
-                    className="w-full flex items-center justify-center gap-2 bg-white text-[#015298] text-sm font-black py-3 rounded-xl hover:bg-[#F2994A] hover:text-white shadow-lg transition-all uppercase tracking-widest disabled:opacity-50"
+                    className="w-full flex items-center justify-center gap-2 bg-theme-700 text-white text-sm font-black py-3 rounded-xl hover:bg-[#F2994A] shadow-md transition-all uppercase tracking-widest disabled:opacity-50"
                   >
                     {status === "loading" && <Loader2 size={18} className="animate-spin" />}
                     {status === "loading" ? "Sending..." : "Send Message"}
