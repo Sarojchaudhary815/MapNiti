@@ -32,6 +32,7 @@ services:
       - ./mapniti-backend/secrets:/app/secrets:ro
       # uploads + caches: avatars, CVs, article images, field photos, boundaries
       - uploads:/app/static
+      - payment_proofs:/app/data/payment_proofs   # private: payment screenshots
     depends_on:
       mysql:
         condition: service_healthy
@@ -47,3 +48,4 @@ services:
 volumes:
   mysql_data:
   uploads:
+  payment_proofs:

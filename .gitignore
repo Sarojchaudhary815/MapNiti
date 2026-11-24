@@ -19,6 +19,8 @@ mapniti-backend/static/resumes/
 mapniti-backend/static/boundaries/
 mapniti-backend/static/articles/
 mapniti-backend/static/field/
+mapniti-backend/static/billing/
+mapniti-backend/data/payment_proofs/
 mapniti-backend/data/temp/
 
 # ---- Python ----

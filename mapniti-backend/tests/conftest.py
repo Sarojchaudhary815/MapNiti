@@ -17,9 +17,15 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from fastapi.testclient import TestClient  # noqa: E402
 
 import main  # noqa: E402
+from app.api import billing as billing_api  # noqa: E402
 from app.auth import create_access_token, hash_password  # noqa: E402
 from app.database import SessionLocal  # noqa: E402
 from app.models.user import User  # noqa: E402
+
+
+# uploaded QR codes and payment screenshots go to the temp folder, not the real ones
+billing_api.QR_DIR = os.path.join(_tmp, "billing")
+billing_api.PROOF_DIR = os.path.join(_tmp, "payment_proofs")
 
 
 @pytest.fixture(scope="session")
@@ -51,4 +57,10 @@ def auth():
 @pytest.fixture
 def other_auth():
     uid = _make_user()
+    return {"Authorization": f"Bearer {create_access_token({'sub': str(uid)})}"}
+
+
+@pytest.fixture
+def admin_auth():
+    uid = _make_user(is_admin=True)
     return {"Authorization": f"Bearer {create_access_token({'sub': str(uid)})}"}

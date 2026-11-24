@@ -9,3 +9,4 @@ secrets/
 static/*
 *.whl
 .pytest_cache/
+data/payment_proofs/
