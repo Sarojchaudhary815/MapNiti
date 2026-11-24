@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Users, FolderOpen, TrendingUp, Share2, Loader2, ShieldCheck } from 'lucide-react';
 import { listAllUsers, getAdminStats } from '../../api/adminApi';
+import AdminPayments from '../billing/AdminPayments';
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
@@ -39,7 +40,7 @@ export default function AdminDashboard() {
           <ShieldCheck className="text-brand-600" size={24} />
           <div>
             <h1 className="text-2xl font-black text-slate-800">Admin Dashboard</h1>
-            <p className="text-sm text-slate-500 mt-1">Read-only view of users and platform activity.</p>
+            <p className="text-sm text-slate-500 mt-1">Users, platform activity and payments.</p>
           </div>
         </div>
 
@@ -66,6 +67,8 @@ export default function AdminDashboard() {
                 </div>
               ))}
             </div>
+
+            <AdminPayments />
 
             <div>
               <h2 className="text-sm font-black text-slate-700 uppercase tracking-wide mb-3">All Users</h2>

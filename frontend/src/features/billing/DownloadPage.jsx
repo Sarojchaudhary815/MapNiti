@@ -78,7 +78,7 @@ export default function DownloadPage() {
               </button>
             ) : (
               <div className="mt-6">
-                <p className="text-sm text-slate-600">You need {quote.due} credits for this file. Buy a pack and come back to this link — it works for 24 hours.</p>
+                <p className="text-sm text-slate-600">You need {quote.due} credit{quote.due === 1 ? '' : 's'} for this file. Buy a pack and come back to this link — it works for 24 hours.</p>
                 <a href="/tool?module=billing" className="mt-4 block text-center rounded-xl bg-theme-700 hover:bg-theme-600 text-white font-bold py-3">Buy credits</a>
               </div>
             )}

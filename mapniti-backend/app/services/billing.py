@@ -43,7 +43,7 @@ PACKS = [
     {"id": "pro", "name": "Pro", "credits": 120, "price": 2000, "days": 0,
      "blurb": "For firms and heavy users"},
     {"id": "monthly", "name": "Unlimited · 30 days", "credits": 0, "price": 1500, "days": 30,
-     "blurb": "Every export free for 30 days"},
+     "blurb": "Best for big projects with many downloads"},
 ]
 PACK_BY_ID = {p["id"]: p for p in PACKS}
 METHODS = {"esewa": "eSewa", "khalti": "Khalti", "fonepay": "Fonepay / mobile banking QR", "bank": "Bank transfer"}

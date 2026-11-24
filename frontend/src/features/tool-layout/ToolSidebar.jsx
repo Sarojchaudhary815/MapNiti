@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   LayoutDashboard, Building2, Zap, Droplets, Sprout, Database, LogOut, ChevronRight, ShieldCheck,
-  Globe2, HardHat, Sparkles, Download, GraduationCap, Radio, MapPinned
+  Globe2, HardHat, Sparkles, Download, GraduationCap, Radio, MapPinned, Wallet
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser, logoutUser } from '../../api/authApi';
@@ -32,6 +32,7 @@ export default function ToolSidebar({ activeModule, setActiveModule }) {
     { id: 'downloads', icon: <Download size={18} />, label: 'Data Download' },
     { id: 'live', icon: <Radio size={18} />, label: 'Live Nepal' },
     { id: 'field', icon: <MapPinned size={18} />, label: 'Field Collect' },
+    { id: 'billing', icon: <Wallet size={18} />, label: 'Credits & Billing' },
     { id: 'ai', icon: <Sparkles size={18} />, label: 'AI Assistant' },
     ...(user?.is_admin ? [{ id: 'admin', icon: <ShieldCheck size={18} />, label: 'Admin' }] : []),
   ];
