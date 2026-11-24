@@ -60,7 +60,7 @@ export default function About() {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-theme-500 font-black text-xs uppercase tracking-widest mb-10">Our Story</h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
             <div className="space-y-8">
               <h1 className="text-4xl font-bold leading-tight text-slate-900">
                 MapNiti was born from a search for a <span className="text-theme-700">better, simpler workflow</span>.
@@ -75,17 +75,16 @@ export default function About() {
               </p>
             </div>
 
-            <div className="grid gap-4">
-              {[
-                ["Simple", "Clear steps from choosing an area to getting a result, without juggling software."],
-                ["All in one place", "Data, analysis, maps, reports and learning together on one platform."],
-                ["Always improving", "We listen to the people who use it and keep making it better."],
-              ].map(([title, text]) => (
-                <div key={title} className="rounded-2xl bg-white border border-slate-100 shadow-sm p-6">
-                  <p className="font-bold text-slate-900">{title}</p>
-                  <p className="text-slate-600 text-sm leading-relaxed mt-1">{text}</p>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="col-span-2">
+                <img src="/assets/about/history-1.jpg" alt="MapNiti team in the field" className="rounded-2xl w-full h-72 object-cover shadow-md" />
+              </div>
+              <div className="mt-4">
+                <img src="/assets/about/history-2.jpg" alt="Survey practice" className="rounded-2xl w-full h-48 object-cover shadow-lg" />
+              </div>
+              <div className="-mt-12">
+                <img src="/assets/about/history-3.jpg" alt="Drone survey" className="rounded-2xl w-full h-80 object-cover shadow-xl border-8 border-white" />
+              </div>
             </div>
           </div>
         </div>
