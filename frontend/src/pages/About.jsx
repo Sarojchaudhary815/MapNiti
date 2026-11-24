@@ -1,25 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { ChevronUp } from "lucide-react";
 import ContourLines from "../components/ContourLines";
 
 export default function About() {
-  const [activeTab, setActiveTab] = useState("All");
-
-  // --- UPDATED PARTNER LOGOS PATH ---
-  const partnerLogos = [
-    { name: "UNDP", cat: "Non-Government", logo: "/assets/about/parter.jpg" },
-    { name: "Nepal Government", cat: "Government", logo: "/assets/about/lmtc.jpg" },
-    { name: "World Vision", cat: "Non-Government", logo: "/assets/about/ngo.jpg" },
-    { name: "Naxa Pvt Ltd", cat: "Private", logo: "/assets/about/naxa.jpg" },
-    { name: "UNOPS", cat: "Non-Government", logo: "/assets/about/unops.png" },
-    { name: "Department of IT", cat: "Government", logo: "/assets/about/doit.png" },
-    { name: "Oxfam", cat: "Non-Government", logo: "/assets/about/oxfam.png" }, 
-  ];
-
-  const filteredLogos = activeTab === "All" 
-    ? partnerLogos 
-    : partnerLogos.filter(logo => logo.cat === activeTab);
-
   return (
     <div className="min-h-screen bg-theme-50/15 font-sans text-slate-800">
       
@@ -72,77 +55,39 @@ export default function About() {
         </div>
       </section>
 
-      {/* --- SECTION 3: OUR HISTORY --- */}
+      {/* --- SECTION 3: OUR STORY --- */}
       <section className="py-24 px-10 md:px-32 bg-theme-50/15">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-theme-500 font-black text-xs uppercase tracking-widest mb-10">Our History</h2>
+          <h2 className="text-theme-500 font-black text-xs uppercase tracking-widest mb-10">Our Story</h2>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
             <div className="space-y-8">
               <h1 className="text-4xl font-bold leading-tight text-slate-900">
-                <span className="text-theme-700">MapNiti Pvt. Ltd.</span> is an outcome of the <span className="text-theme-700">willpower</span> to introduce location data as the foundational data for any developmental activity.
+                MapNiti was born from a search for a <span className="text-theme-700">better, simpler workflow</span>.
               </h1>
-              <p className="text-slate-600 text-base leading-relaxed italic">
-                The company was founded by Geomatics Engineers specialized in GIS mapping and geo-database management and visualization.
+              <p className="text-slate-600 text-base leading-relaxed">
+                Everyday GIS work meant jumping between many tools: downloading data in one place, processing it in another,
+                and making maps and reports somewhere else. We wanted one place where that whole journey is easy.
               </p>
               <p className="text-slate-600 text-base leading-relaxed">
-                The team developed an app "CLEAN KTM" which is a crowdsourcing platform to report and manage waste problems in Kathmandu Valley during the NASA International Space Apps Challenge.
+                So we built MapNiti, and we keep improving it so it stays simple to use and genuinely useful for engineers,
+                students and planners.
               </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
-              <div className="col-span-2">
-                <img src="/assets/about/history-1.jpg" alt="Team" className="rounded-2xl w-full h-72 object-cover shadow-md" />
-              </div>
-              <div className="mt-4">
-                <img src="/assets/about/history-2.jpg" alt="Award" className="rounded-2xl w-full h-48 object-cover shadow-lg" />
-              </div>
-              <div className="-mt-12">
-                <img src="/assets/about/history-3.jpg" alt="Work" className="rounded-2xl w-full h-80 object-cover shadow-xl border-8 border-white" />
-              </div>
+            <div className="grid gap-4">
+              {[
+                ["Simple", "Clear steps from choosing an area to getting a result, without juggling software."],
+                ["All in one place", "Data, analysis, maps, reports and learning together on one platform."],
+                ["Always improving", "We listen to the people who use it and keep making it better."],
+              ].map(([title, text]) => (
+                <div key={title} className="rounded-2xl bg-white border border-slate-100 shadow-sm p-6">
+                  <p className="font-bold text-slate-900">{title}</p>
+                  <p className="text-slate-600 text-sm leading-relaxed mt-1">{text}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* --- SECTION 4: CLIENTELE --- */}
-      <section className="py-24 px-10 md:px-32 bg-theme-50/15">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-10">
-            <h2 className="text-theme-500 font-black text-xs uppercase tracking-widest mb-6">Our Clientèle</h2>
-            <h3 className="text-4xl font-bold mb-6 text-slate-900">We love working with network of <span className="text-theme-700">leading partners</span></h3>
-          </div>
-
-          <div className="flex flex-wrap gap-8 border-b border-slate-100 mb-16 text-xs font-black text-slate-400 uppercase tracking-[0.2em]">
-            {["All", "Government", "Non-Government", "Private"].map((tab) => (
-              <span
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`pb-5 cursor-pointer transition-all border-b-4 ${
-                  activeTab === tab ? "border-theme-900 text-slate-900" : "border-transparent hover:text-theme-900"
-                }`}
-              >
-                {tab}
-              </span>
-            ))}
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-12 gap-y-16 items-center">
-             {filteredLogos.map((item, index) => (
-               <div key={index} className="h-20 flex items-center justify-center transition-all duration-300">
-                  <img 
-                    src={item.logo} 
-                    alt={item.name} 
-                    className="max-h-full max-w-full object-contain transition-all hover:scale-110"
-                    title={item.name}
-                  />
-               </div>
-             ))}
-          </div>
-          
-          {filteredLogos.length === 0 && (
-            <p className="text-center text-slate-400 py-10 uppercase text-xs tracking-widest">No partners to show.</p>
-          )}
         </div>
       </section>
 

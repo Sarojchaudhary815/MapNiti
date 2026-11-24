@@ -483,9 +483,6 @@ export default function Home() {
               <h2 className="text-theme-500 font-black text-xs uppercase tracking-[0.3em] mb-4">Services</h2>
               <h3 className="font-display text-3xl md:text-4xl font-bold text-slate-900">What we offer beyond the platform</h3>
             </div>
-            <Link to="/services" className="inline-flex items-center gap-2 text-theme-700 font-bold text-sm hover:gap-3 hover:text-theme-900 transition-all shrink-0">
-              View all services <ArrowRight size={16} />
-            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

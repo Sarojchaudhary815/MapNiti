@@ -11,7 +11,7 @@ const Footer = () => {
       title: 'Company',
       links: [
         { to: '/about', label: 'About MapNiti' },
-        { to: '/services', label: 'Services' },
+        { to: '/#services', label: 'Services' },
         { to: '/contact', label: 'Contact' },
       ],
     },
@@ -19,7 +19,6 @@ const Footer = () => {
       title: 'Product',
       links: [
         { to: '/#features', label: 'Features' },
-        { to: '/#services', label: 'What We Offer' },
         { to: '/tool', label: 'MapNiti Tool' },
         { to: '/register', label: 'Get Started' },
       ],

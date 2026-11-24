@@ -9,7 +9,6 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Projects from './pages/Projects';
-import Services from './pages/Services';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import LearnPage from './pages/public/LearnPage';
@@ -52,7 +51,8 @@ export default function App() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
+          {/* old links to the separate services page land on the home page section */}
+          <Route path="/services" element={<Navigate to="/#services" replace />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/contact" element={<Contact />} />
           {/* Free public knowledge base — no login needed */}
