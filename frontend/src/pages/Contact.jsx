@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaFacebookF, FaLinkedinIn, FaWhatsapp, FaFacebookMessenger, FaInstagram, FaGlobe } from "react-icons/fa";
+import { FaFacebookF, FaLinkedinIn, FaWhatsapp, FaGlobe } from "react-icons/fa";
 import { Loader2, CheckCircle2, AlertCircle, Mail, Phone } from "lucide-react";
 import { sendContact } from "../api/websiteApi";
 import FloatingField from "../components/FloatingField";
@@ -158,7 +158,6 @@ const MapNitiFullContact = () => {
             <div className="text-left">
               <p className="text-[10px] font-black uppercase text-slate-400 mb-2 tracking-widest">Email Us</p>
               <div className="flex flex-col gap-1">
-                <a href="mailto:info@mapniti.com" className="text-base font-bold text-slate-700 hover:text-theme-900 transition-colors">info@mapniti.com</a>
                 <a href="mailto:mapniti@gmail.com" className="text-base font-bold text-slate-700 hover:text-theme-900 transition-colors">mapniti@gmail.com</a>
               </div>
             </div>
@@ -175,14 +174,12 @@ const MapNitiFullContact = () => {
               <div className="flex items-center gap-4">
                 <span className="font-black text-slate-800 text-sm uppercase tracking-tighter">Chat with us:</span>
                 <div className="flex gap-2">
-                  <a href="#" className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white hover:scale-110 transition-all shadow-md"><FaWhatsapp className="text-xl" /></a>
-                  <a href="#" className="w-10 h-10 bg-[#0084FF] rounded-full flex items-center justify-center text-white hover:scale-110 transition-all shadow-md"><FaFacebookMessenger className="text-xl" /></a>
+                  <a href="https://wa.me/9779824646029" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="w-10 h-10 bg-[#25D366] rounded-full flex items-center justify-center text-white hover:scale-110 transition-all shadow-md"><FaWhatsapp className="text-xl" /></a>
                 </div>
               </div>
               <div className="flex gap-6 pr-1">
-                <a href="#" className="text-slate-400 hover:text-theme-900 transition-colors text-xl"><FaFacebookF /></a>
-                <a href="#" className="text-slate-400 hover:text-theme-900 transition-colors text-xl"><FaLinkedinIn /></a>
-                <a href="#" className="text-slate-400 hover:text-pink-600 transition-colors text-xl"><FaInstagram /></a>
+                <a href="https://www.facebook.com/share/1N8su6FE2g/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-slate-400 hover:text-theme-900 transition-colors text-xl"><FaFacebookF /></a>
+                <a href="https://www.linkedin.com/in/saroj-chaudhary2003/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-slate-400 hover:text-theme-900 transition-colors text-xl"><FaLinkedinIn /></a>
               </div>
             </div>
           </div>

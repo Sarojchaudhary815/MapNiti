@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Facebook, Linkedin, Instagram, Mail, Phone, MapPin, Map as MapIcon } from 'lucide-react';
+import { Facebook, Linkedin, Mail, Phone, MapPin, Map as MapIcon } from 'lucide-react';
 const LogoImg = '/assets/MapNiti_logo_transparent.png';
 
 const Footer = () => {
@@ -49,14 +49,11 @@ const Footer = () => {
             urban planning, and agriculture analysis, powered by Google Earth Engine.
           </p>
           <div className="flex gap-4">
-            <a href="#" aria-label="Facebook" className="h-9 w-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-theme-200 hover:text-theme-900 transition-all">
+            <a href="https://www.facebook.com/share/1N8su6FE2g/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="h-9 w-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-theme-200 hover:text-theme-900 transition-all">
               <Facebook size={16} />
             </a>
-            <a href="#" aria-label="LinkedIn" className="h-9 w-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-theme-200 hover:text-theme-900 transition-all">
+            <a href="https://www.linkedin.com/in/saroj-chaudhary2003/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="h-9 w-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-theme-200 hover:text-theme-900 transition-all">
               <Linkedin size={16} />
-            </a>
-            <a href="#" aria-label="Instagram" className="h-9 w-9 flex items-center justify-center rounded-full bg-white/10 hover:bg-theme-200 hover:text-theme-900 transition-all">
-              <Instagram size={16} />
             </a>
           </div>
         </div>
@@ -87,7 +84,7 @@ const Footer = () => {
           <ul className="space-y-4 text-sm text-blue-100/80">
             <li className="flex items-start gap-3">
               <Mail size={16} className="mt-0.5 shrink-0" />
-              <a href="mailto:info@mapniti.com" className="hover:text-white transition-colors">info@mapniti.com</a>
+              <a href="mailto:mapniti@gmail.com" className="hover:text-white transition-colors">mapniti@gmail.com</a>
             </li>
             <li className="flex items-start gap-3">
               <Phone size={16} className="mt-0.5 shrink-0" />
